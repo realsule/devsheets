@@ -1,0 +1,256 @@
+{
+  "menu": 2,
+  "menu_title": "SSH keys and authentication",
+  "section": "SSH",
+  "order": 0,
+  "entries": [
+    {
+      "id": "ssh-generate",
+      "title": "Generate an SSH key",
+      "keywords": [
+        "ssh key",
+        "ssh-keygen",
+        "generate ssh key",
+        "ed25519",
+        "new ssh key"
+      ],
+      "summary": "Creates a private/public key pair used to log in to GitHub without passwords.",
+      "when": "Once per machine (WSL and Windows each need their own key).",
+      "where": "Any terminal, any directory.",
+      "os": "both",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "ssh-keygen -t ed25519 -C \"you@example.com\""
+          ],
+          "label": "Press Enter to accept the default file; set a passphrase (recommended)",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "ssh-keygen -t rsa -b 4096 -C \"you@example.com\""
+          ],
+          "label": "Only if ed25519 is unsupported on an old system",
+          "dir": "Any directory"
+        }
+      ],
+      "warning": "If ~/.ssh/id_ed25519 already exists, do not overwrite it - you would lose access anywhere that key is used.",
+      "expected": "Two files: ~/.ssh/id_ed25519 (PRIVATE) and ~/.ssh/id_ed25519.pub (public).",
+      "troubleshooting": [
+        "PowerShell 'ssh-keygen not recognized': enable 'OpenSSH Client' in Windows Optional Features, or use Git Bash.",
+        "If asked 'Overwrite (y/n)?' answer n and choose a different filename."
+      ]
+    },
+    {
+      "id": "ssh-agent",
+      "title": "Add the key to the SSH agent",
+      "keywords": [
+        "ssh-agent",
+        "ssh-add",
+        "load key",
+        "add ssh key to agent",
+        "passphrase every time"
+      ],
+      "summary": "Loads your key into memory so you type the passphrase once per session.",
+      "when": "After generating a key, or when Git asks for the passphrase repeatedly.",
+      "where": "Linux/WSL: any directory. Windows: an Administrator PowerShell for the first step.",
+      "os": "both",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "eval \"$(ssh-agent -s)\"",
+            "ssh-add ~/.ssh/id_ed25519",
+            "ssh-add -l"
+          ],
+          "label": "Linux / WSL / macOS",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-Service -Name ssh-agent | Set-Service -StartupType Manual",
+            "Start-Service ssh-agent"
+          ],
+          "label": "Windows step 1: enable and start the agent (once)",
+          "dir": "Any directory (run PowerShell as Administrator)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "ssh-add $env:USERPROFILE\\.ssh\\id_ed25519",
+            "ssh-add -l"
+          ],
+          "label": "Windows step 2: add the key (normal PowerShell)",
+          "dir": "Any directory"
+        }
+      ],
+      "expected": "'Identity added: ...' then 'ssh-add -l' lists your key fingerprint.",
+      "troubleshooting": [
+        "'Could not open a connection to your authentication agent': run the eval line first (Linux).",
+        "'Error connecting to agent: No such file': start the ssh-agent service (Windows step 1).",
+        "Agent is per terminal session on Linux; add 'AddKeysToAgent yes' to ~/.ssh/config to automate."
+      ]
+    },
+    {
+      "id": "ssh-add-to-github",
+      "title": "Add your public key to GitHub",
+      "keywords": [
+        "add ssh key to github",
+        "copy public key",
+        "id_ed25519.pub",
+        "github ssh settings"
+      ],
+      "summary": "Gives GitHub your PUBLIC key so it can recognise you.",
+      "when": "After generating a key.",
+      "where": "Terminal for the first step; browser for the rest.",
+      "os": "both",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "cat ~/.ssh/id_ed25519.pub"
+          ],
+          "label": "Print the public key (Linux/WSL/macOS)",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-Content $env:USERPROFILE\\.ssh\\id_ed25519.pub"
+          ],
+          "label": "Print the public key (PowerShell)",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "1. Copy the whole line (starts with ssh-ed25519, ends with your email).",
+            "2. GitHub > profile picture > Settings > SSH and GPG keys > New SSH key.",
+            "3. Give it a title (e.g. \"Ubuntu laptop\"), paste the key, click Add SSH key."
+          ],
+          "label": "In your browser"
+        }
+      ],
+      "warning": "Only ever share the .pub file. The file without .pub is secret.",
+      "expected": "The key appears in your GitHub SSH keys list.",
+      "troubleshooting": [
+        "Never paste the file WITHOUT .pub - that is your private key."
+      ]
+    },
+    {
+      "id": "ssh-test",
+      "title": "Test GitHub SSH authentication",
+      "keywords": [
+        "ssh -T git@github.com",
+        "test ssh",
+        "github ssh test",
+        "successfully authenticated"
+      ],
+      "summary": "Checks that GitHub accepts your key.",
+      "when": "After adding the key, or when git push/clone fails.",
+      "where": "Any terminal, any directory.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "ssh -T git@github.com"
+          ],
+          "dir": "Any directory"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "ssh -vT git@github.com"
+          ],
+          "label": "Verbose mode if it fails",
+          "dir": "Any directory"
+        }
+      ],
+      "expected": "First time: type 'yes' to trust github.com. Then: \"Hi USERNAME! You've successfully authenticated, but GitHub does not provide shell access.\"",
+      "troubleshooting": [
+        "Permission denied (publickey): key not in agent (ssh-add -l) or not added to your GitHub account.",
+        "Hi <someone else>!: you are using another account's key; use an SSH config with IdentityFile.",
+        "Connection timed out on port 22: see 'SSH over port 443'."
+      ]
+    },
+    {
+      "id": "ssh-config-443",
+      "title": "SSH config: pick a key, or use port 443",
+      "keywords": [
+        "ssh config",
+        "port 443",
+        "ssh.github.com",
+        "identityfile",
+        "port 22 blocked",
+        "addkeystoagent"
+      ],
+      "summary": "A ~/.ssh/config entry that pins your key and works through firewalls that block port 22.",
+      "when": "Port 22 is blocked, or you have several keys/accounts.",
+      "where": "Edit ~/.ssh/config (Windows: C:\\Users\\you\\.ssh\\config).",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "Host github.com",
+            "  Hostname ssh.github.com",
+            "  Port 443",
+            "  User git",
+            "  IdentityFile ~/.ssh/id_ed25519",
+            "  AddKeysToAgent yes"
+          ],
+          "label": "Add this block",
+          "file": "~/.ssh/config"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "ssh -T git@github.com"
+          ],
+          "label": "Test again",
+          "dir": "Any directory"
+        }
+      ],
+      "expected": "Same success message as the normal SSH test.",
+      "troubleshooting": [
+        "Remove 'AddKeysToAgent' if your OpenSSH is very old and complains about it.",
+        "Config indentation is two spaces; no tabs required but be consistent."
+      ]
+    },
+    {
+      "id": "ssh-permissions",
+      "title": "Fix 'UNPROTECTED PRIVATE KEY FILE' permissions",
+      "keywords": [
+        "unprotected private key file",
+        "bad permissions",
+        "chmod 600",
+        "ssh permissions",
+        "wsl windows keys"
+      ],
+      "summary": "SSH refuses keys that other users can read.",
+      "when": "On Linux/WSL when ssh says permissions are too open.",
+      "where": "Any directory (Linux/WSL).",
+      "os": "linux",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "chmod 700 ~/.ssh",
+            "chmod 600 ~/.ssh/id_ed25519",
+            "chmod 644 ~/.ssh/id_ed25519.pub"
+          ],
+          "dir": "Any directory"
+        }
+      ],
+      "expected": "ssh stops complaining about permissions.",
+      "troubleshooting": [
+        "WSL and Windows have SEPARATE ~/.ssh folders. A key made in PowerShell is not visible inside WSL.",
+        "Keys stored on /mnt/c/... cannot be chmod'ed properly; keep keys inside the WSL home folder."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "menu": 9,
+  "menu_title": "Running, debugging and building applications",
+  "section": "Running",
+  "order": 0,
+  "entries": [
+    {
+      "id": "run-dev-options",
+      "title": "Dev server options: port, LAN access, open browser",
+      "keywords": [
+        "change port",
+        "vite port",
+        "--host",
+        "open on phone",
+        "network access",
+        "--open",
+        "dev server options"
+      ],
+      "summary": "Flags passed to Vite after the double dash.",
+      "when": "Port 5173 clashes, or you want to test on your phone.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npm run dev -- --port 3000"
+          ],
+          "label": "Different port",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm run dev -- --host"
+          ],
+          "label": "Expose on your local network (phone on same Wi-Fi uses the 'Network:' URL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm run dev -- --open"
+          ],
+          "label": "Open the browser automatically",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "Terminal shows Local: and (with --host) Network: URLs.",
+      "troubleshooting": [
+        "Phone cannot connect: allow Node through the Windows firewall; WSL2 may need port forwarding or mirrored networking."
+      ]
+    },
+    {
+      "id": "port-in-use",
+      "title": "Port already in use / stop a stuck server",
+      "keywords": [
+        "port in use",
+        "eaddrinuse",
+        "5173 busy",
+        "kill process",
+        "stuck server",
+        "address already in use"
+      ],
+      "summary": "Find which program holds a port and stop it.",
+      "when": "An old dev server is still running in another terminal or background.",
+      "where": "Any directory.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "lsof -i :5173"
+          ],
+          "label": "1. Who uses the port (Linux/WSL/macOS)",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "kill PID"
+          ],
+          "label": "2. Stop it (replace PID with the number you saw)",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-NetTCPConnection -LocalPort 5173 | Select-Object OwningProcess"
+          ],
+          "label": "1. Who uses the port (PowerShell)",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Stop-Process -Id PID"
+          ],
+          "label": "2. Stop it (replace PID)",
+          "dir": "Any directory"
+        }
+      ],
+      "warning": "Check the process name before stopping it. Replace PID with the real number - do not stop processes you do not recognise.",
+      "expected": "The port is free; 'npm run dev' uses 5173 again.",
+      "troubleshooting": [
+        "Easier: just use another port (npm run dev -- --port 3000).",
+        "'lsof' missing: sudo apt install lsof."
+      ]
+    },
+    {
+      "id": "debug-react",
+      "title": "Debug a React app (console, DevTools, errors)",
+      "keywords": [
+        "debug",
+        "console.log",
+        "devtools",
+        "browser console",
+        "error overlay",
+        "react devtools",
+        "debugging react",
+        "blank screen"
+      ],
+      "summary": "A routine for finding why something does not render or work.",
+      "when": "Page is blank, a button does nothing, data looks wrong.",
+      "where": "Browser + the terminal running Vite.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "1. Look at the TERMINAL running 'npm run dev': syntax/import errors appear here.",
+            "2. Look at the red overlay in the browser: it shows file and line.",
+            "3. Open DevTools (F12) > Console: runtime errors; Network: failed requests; Elements: the rendered HTML.",
+            "4. Install the 'React Developer Tools' browser extension to inspect props and state."
+          ],
+          "label": "Order of checks"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "console.log('props:', props)",
+            "console.log('state:', likes)"
+          ],
+          "label": "Print values",
+          "file": "inside the component"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "debugger   // execution pauses here when DevTools is open"
+          ],
+          "label": "Breakpoint",
+          "file": "inside a function"
+        }
+      ],
+      "expected": "You can name the failing file, line or request.",
+      "troubleshooting": [
+        "Remove console.log/debugger before committing.",
+        "Blank page + no error: check that main.jsx renders <App /> into #root and the route path matches the URL."
+      ]
+    },
+    {
+      "id": "lint-check",
+      "title": "Run the linter",
+      "keywords": [
+        "lint",
+        "eslint",
+        "npm run lint",
+        "fix lint errors",
+        "code quality"
+      ],
+      "summary": "ESLint flags suspicious code (unused variables, hook mistakes).",
+      "when": "Before committing, if the project has a lint script.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npm run lint"
+          ],
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npx eslint . --fix"
+          ],
+          "label": "Auto-fix what ESLint can (review the git diff afterwards)",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "No output/zero problems, or a list of file:line messages.",
+      "troubleshooting": [
+        "'Missing script: lint': the project has no linter; skip it."
+      ]
+    },
+    {
+      "id": "deploy-netlify",
+      "title": "Deploy settings for Netlify (React/Vite + routes)",
+      "keywords": [
+        "netlify",
+        "deploy",
+        "publish directory",
+        "dist",
+        "_redirects",
+        "spa redirect",
+        "404 on refresh",
+        "netlify.toml"
+      ],
+      "summary": "Build command, output folder and the redirect that makes React Router paths work.",
+      "when": "Deploying a Vite app, or getting 404 when refreshing /about.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "Build command:     npm run build",
+            "Publish directory: dist",
+            "Node version:      set NODE_VERSION in Netlify env vars, or add a .nvmrc"
+          ],
+          "label": "Netlify site settings"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "/*    /index.html   200"
+          ],
+          "label": "SPA fallback so /about works on refresh",
+          "file": "public/_redirects"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "[[redirects]]",
+            "  from = \"/*\"",
+            "  to = \"/index.html\"",
+            "  status = 200"
+          ],
+          "label": "Same thing, as netlify.toml",
+          "file": "netlify.toml"
+        }
+      ],
+      "expected": "Refreshing /about on the live site loads the app instead of Netlify's 404.",
+      "troubleshooting": [
+        "Env variables (VITE_*) must also be set in Netlify's UI, then redeploy.",
+        "Case-sensitive file names on Netlify: ./Home must match Home.jsx exactly."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,550 @@
+{
+  "menu": 10,
+  "menu_title": "Common errors and fixes",
+  "section": "Errors",
+  "order": 0,
+  "entries": [
+    {
+      "id": "err-vite-not-found",
+      "title": "'vite: command not found' / 'vite is not recognized'",
+      "keywords": [
+        "vite not found",
+        "vite is not recognized",
+        "sh: vite: command not found",
+        "vite command not found",
+        "npm run dev fails"
+      ],
+      "summary": "Vite is not installed in this folder, or you ran it outside the project.",
+      "when": "npm run dev / vite fails immediately.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "ls package.json"
+          ],
+          "label": "1. Are you in the project root? (Linux/WSL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-ChildItem package.json"
+          ],
+          "label": "1. Are you in the project root? (PowerShell)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm install"
+          ],
+          "label": "2. Install dependencies",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npx vite --version"
+          ],
+          "label": "3. Check Vite is present",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm run dev"
+          ],
+          "label": "4. Start via the script",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "A Vite version prints and the dev server starts.",
+      "troubleshooting": [
+        "package.json does not list vite? It is not a Vite project - run the script the README/package.json names.",
+        "Typing 'vite' directly never works for local installs; use npm run dev or npx vite.",
+        "Still failing: Common errors > Clean reinstall."
+      ]
+    },
+    {
+      "id": "err-npm-not-recognized",
+      "title": "'npm is not recognized' / 'node: command not found'",
+      "keywords": [
+        "npm not recognized",
+        "node not found",
+        "npm command not found",
+        "node not recognized",
+        "path not updated"
+      ],
+      "summary": "Node.js is not installed, or this terminal started before PATH was updated.",
+      "when": "Right after installing Node, or in a new terminal type.",
+      "where": "Any directory",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "node --version"
+          ],
+          "label": "Check",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "1. Close ALL terminals (and VS Code) and reopen.",
+            "2. Still missing: install via the Node menu (NVM on Linux/WSL, nvm-windows or winget on Windows).",
+            "3. WSL: Windows' Node is not WSL's Node. Install Node inside WSL too."
+          ],
+          "label": "Fix"
+        }
+      ],
+      "expected": "node --version prints a version.",
+      "troubleshooting": [
+        "With NVM: run 'nvm use --lts' (Linux) or 'nvm use lts' (Windows) in the new terminal."
+      ]
+    },
+    {
+      "id": "err-powershell-policy",
+      "title": "PowerShell: 'running scripts is disabled on this system'",
+      "keywords": [
+        "execution policy",
+        "running scripts is disabled",
+        "npm.ps1 cannot be loaded",
+        "powershell security error",
+        "set-executionpolicy"
+      ],
+      "summary": "PowerShell blocks the npm.ps1 wrapper script.",
+      "when": "npm/npx fail in Windows PowerShell with an UnauthorizedAccess message.",
+      "where": "Any PowerShell window.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "powershell",
+          "code": [
+            "Set-ExecutionPolicy -Scope CurrentUser RemoteSigned"
+          ],
+          "dir": "Any directory"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "npm.cmd run dev"
+          ],
+          "label": "Alternative without changing policy: call npm.cmd",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "warning": "This changes a Windows security setting for your user account. Only do it on your own machine.",
+      "expected": "npm commands run normally.",
+      "troubleshooting": [
+        "This only changes policy for your user, allowing local scripts and signed remote scripts."
+      ]
+    },
+    {
+      "id": "err-eresolve",
+      "title": "npm ERESOLVE: unable to resolve dependency tree",
+      "keywords": [
+        "eresolve",
+        "peer dependency",
+        "unable to resolve dependency tree",
+        "legacy-peer-deps",
+        "npm install fails",
+        "conflicting peer dependency"
+      ],
+      "summary": "Two packages require incompatible versions of a shared dependency (often React).",
+      "when": "npm install fails with ERESOLVE.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npm ls react"
+          ],
+          "label": "1. See which React version is installed",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm install --legacy-peer-deps"
+          ],
+          "label": "2. LAST RESORT: ignore peer conflicts",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "Better: upgrade/downgrade the package named in the error to a version that supports your React version."
+          ],
+          "label": "Preferred fix"
+        }
+      ],
+      "warning": "--legacy-peer-deps can hide real incompatibilities; test the app after using it.",
+      "expected": "npm completes and the app runs.",
+      "troubleshooting": [
+        "Use the same flag consistently for the project and note it in the README.",
+        "Do not combine --force with random package edits."
+      ]
+    },
+    {
+      "id": "err-module-not-found",
+      "title": "'Cannot find module' / 'Failed to resolve import'",
+      "keywords": [
+        "cannot find module",
+        "failed to resolve import",
+        "module not found",
+        "import error",
+        "could not resolve",
+        "import path"
+      ],
+      "summary": "The import path is wrong, the file name case differs, or the package is not installed.",
+      "when": "Red error overlay or terminal error after adding an import.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "Local file import ('./components/Card'):",
+            "  - Check ./ vs ../ and spelling.",
+            "  - Case matters on Linux/Netlify: Card.jsx != card.jsx.",
+            "Package import ('axios'):",
+            "  - Run: npm install axios (name must match package.json)."
+          ],
+          "label": "Check"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git ls-files src"
+          ],
+          "label": "List exact file names",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "The import resolves and the error overlay disappears.",
+      "troubleshooting": [
+        "After renaming a file on Windows/macOS, Git may not notice a case-only change: git mv Old.jsx New.jsx."
+      ]
+    },
+    {
+      "id": "err-jsx-in-js",
+      "title": "'Failed to parse source ... contains invalid JS syntax. If you are using JSX...'",
+      "keywords": [
+        "invalid js syntax jsx",
+        "failed to parse source",
+        "jsx in .js file",
+        "rename to .jsx",
+        "unexpected token <"
+      ],
+      "summary": "Vite only treats .jsx/.tsx files as JSX.",
+      "when": "A component file named .js contains JSX.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git mv src/components/Card.js src/components/Card.jsx"
+          ],
+          "label": "Rename (git mv keeps history)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "Imports without extensions keep working. Imports WITH '.js' must be updated."
+          ],
+          "label": "Then"
+        }
+      ],
+      "expected": "The error disappears."
+    },
+    {
+      "id": "err-invalid-hook",
+      "title": "'Invalid hook call' / hooks rules errors",
+      "keywords": [
+        "invalid hook call",
+        "hooks can only be called inside",
+        "usestate error",
+        "rules of hooks",
+        "two copies of react"
+      ],
+      "summary": "Hooks used outside a component, inside conditions, or two React copies installed.",
+      "when": "Console error mentioning hooks.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "- Call useState/useEffect only at the TOP of a function component (never in if/loops/handlers).",
+            "- Component names start with a capital letter."
+          ],
+          "label": "Code checks"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm ls react react-dom"
+          ],
+          "label": "Duplicate versions of React?",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "One version of react and react-dom, no hook error.",
+      "troubleshooting": [
+        "Duplicates: remove node_modules and reinstall (Clean reinstall)."
+      ]
+    },
+    {
+      "id": "err-blank-page",
+      "title": "Blank white page / nothing renders",
+      "keywords": [
+        "blank page",
+        "white screen",
+        "nothing renders",
+        "app not showing",
+        "react blank screen",
+        "empty page"
+      ],
+      "summary": "A runtime error stopped rendering, or the router/root is misconfigured.",
+      "when": "Dev or deployed site shows an empty page.",
+      "where": "Browser + terminal.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "1. Browser DevTools (F12) > Console: read the first red error.",
+            "2. Terminal running 'npm run dev': any error?",
+            "3. index.html still has <div id=\"root\"> and the main.jsx script?",
+            "4. main.jsx renders <App /> into document.getElementById('root')?",
+            "5. Route path matches the URL (try '/')?",
+            "6. Deployed only? Check 'base' in vite.config and SPA redirects (Running > Netlify)."
+          ],
+          "label": "Checklist"
+        }
+      ],
+      "expected": "You find the first real error.",
+      "troubleshooting": [
+        "Fix the FIRST error; later ones are often side effects."
+      ]
+    },
+    {
+      "id": "err-react-child",
+      "title": "'Objects are not valid as a React child' and key warnings",
+      "keywords": [
+        "objects are not valid as a react child",
+        "each child should have a unique key",
+        "render object",
+        "jsx object error"
+      ],
+      "summary": "You rendered an object instead of text/JSX, or a list without keys.",
+      "when": "Console error right after adding data to JSX.",
+      "where": "The component file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "jsx",
+          "code": [
+            "<p>{user}</p>                 {/* BAD if user is an object */}",
+            "<p>{user.name}</p>            {/* GOOD */}",
+            "<li key={item.id}>...</li>    {/* keys for list items */}"
+          ],
+          "file": "component"
+        }
+      ],
+      "expected": "No console errors.",
+      "troubleshooting": [
+        "Need to see an object? {JSON.stringify(user)} for debugging."
+      ]
+    },
+    {
+      "id": "err-env-undefined",
+      "title": "import.meta.env.VITE_X is undefined",
+      "keywords": [
+        "env undefined",
+        "vite env not working",
+        "import.meta.env undefined",
+        "process.env vite"
+      ],
+      "summary": "The variable name, file name, or restart is wrong.",
+      "when": "Config values are undefined in the browser.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "- Name MUST start with VITE_ (VITE_API_URL).",
+            "- File in the project root: .env or .env.local.",
+            "- Restart npm run dev after editing it.",
+            "- Vite uses import.meta.env.X, not process.env.X.",
+            "- Deployed? Set the variable in the host's settings and redeploy."
+          ],
+          "label": "Checklist"
+        }
+      ],
+      "expected": "console.log(import.meta.env.VITE_API_URL) prints the value."
+    },
+    {
+      "id": "err-cors",
+      "title": "CORS error when calling an API",
+      "keywords": [
+        "cors",
+        "blocked by cors policy",
+        "access-control-allow-origin",
+        "proxy",
+        "api request blocked"
+      ],
+      "summary": "The browser blocks requests to another origin unless the server allows it.",
+      "when": "fetch to your backend fails in the browser but works in Postman/curl.",
+      "where": "vite.config.js (dev) and your backend (production).",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "js",
+          "code": [
+            "export default defineConfig({",
+            "  plugins: [react()],",
+            "  server: {",
+            "    proxy: { '/api': { target: 'http://localhost:5000', changeOrigin: true } },",
+            "  },",
+            "})"
+          ],
+          "label": "Dev: proxy /api to the backend, then fetch('/api/...') (restart Vite)",
+          "file": "vite.config.js"
+        }
+      ],
+      "expected": "Requests to /api reach the backend without CORS errors.",
+      "troubleshooting": [
+        "Production: configure CORS headers on the backend (e.g. Flask-CORS / FastAPI CORSMiddleware) for your site's origin."
+      ]
+    },
+    {
+      "id": "err-spa-404",
+      "title": "404 when refreshing /about on a deployed site",
+      "keywords": [
+        "404 on refresh",
+        "page not found refresh",
+        "spa routing deploy",
+        "react router refresh 404",
+        "netlify 404"
+      ],
+      "summary": "The server looks for an /about file; a single-page app only has index.html.",
+      "when": "Links work, but refresh or direct URL gives 404 online.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "/*    /index.html   200"
+          ],
+          "label": "Netlify: add this file, rebuild and redeploy",
+          "file": "public/_redirects"
+        }
+      ],
+      "expected": "Direct visits to /about load the app.",
+      "troubleshooting": [
+        "Other hosts need an equivalent 'rewrite all to index.html' rule."
+      ]
+    },
+    {
+      "id": "err-eacces",
+      "title": "EACCES permission denied on npm install -g",
+      "keywords": [
+        "eacces",
+        "permission denied npm",
+        "sudo npm",
+        "global install fails",
+        "npm permission error"
+      ],
+      "summary": "npm tries to write to a system folder.",
+      "when": "Global installs fail on Linux.",
+      "where": "Any directory",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "Do NOT use sudo npm. Use NVM (Node menu) so global packages go in your home folder.",
+            "Most tools do not need -g: use npx or project-local installs."
+          ],
+          "label": "Fix"
+        }
+      ],
+      "expected": "Installs work without sudo.",
+      "troubleshooting": [
+        "Wrong owner on node_modules from an earlier sudo? Delete node_modules and reinstall as your normal user."
+      ]
+    },
+    {
+      "id": "err-clean-reinstall",
+      "title": "Clean reinstall of dependencies",
+      "keywords": [
+        "clean reinstall",
+        "delete node_modules",
+        "reinstall dependencies",
+        "corrupted node_modules",
+        "weird npm errors",
+        "rm -rf node_modules"
+      ],
+      "summary": "Rebuilds node_modules from the lockfile; fixes many strange install/runtime problems.",
+      "when": "After switching Node versions or branches, or after half-finished installs.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "pwd && ls package.json"
+          ],
+          "label": "1. Confirm you are in the project root (Linux/WSL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "rm -rf node_modules"
+          ],
+          "label": "2. Delete installed packages (Linux/WSL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-Location; Get-ChildItem package.json"
+          ],
+          "label": "1. Confirm you are in the project root (PowerShell)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Remove-Item -Recurse -Force node_modules"
+          ],
+          "label": "2. Delete installed packages (PowerShell)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm ci"
+          ],
+          "label": "3. Reinstall exactly from the lockfile (or npm install)",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "warning": "rm -rf / Remove-Item -Recurse -Force delete permanently with no confirmation. Run ONLY in the project root, and only on node_modules.",
+      "expected": "node_modules is rebuilt and the app starts.",
+      "troubleshooting": [
+        "Do not delete package-lock.json unless a maintainer tells you to."
+      ]
+    }
+  ]
+}

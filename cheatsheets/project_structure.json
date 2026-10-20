@@ -1,0 +1,389 @@
+{
+  "menu": 7,
+  "menu_title": "Project structure and file navigation",
+  "section": "Project",
+  "order": 0,
+  "entries": [
+    {
+      "id": "repo-workflow",
+      "title": "Set up an existing repository (12-step workflow)",
+      "keywords": [
+        "existing repository",
+        "existing repo",
+        "clone and run",
+        "setup project",
+        "onboarding",
+        "run someone else's react project",
+        "clone repository install run"
+      ],
+      "summary": "The safe order for getting an existing project running and making your first change.",
+      "when": "Any time you clone a project you did not create.",
+      "where": "Starts in your projects folder, then the project root.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git clone git@github.com:USERNAME/REPO.git"
+          ],
+          "label": "1. Clone (or use the https:// URL)",
+          "dir": "The folder where you keep projects (e.g. ~/projects or C:\\Users\\you\\projects)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "cd REPO"
+          ],
+          "label": "2. Enter the project folder Git created",
+          "dir": "The folder where you keep projects (e.g. ~/projects or C:\\Users\\you\\projects)"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "ls -la"
+          ],
+          "label": "3. Inspect files (Linux/WSL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-ChildItem -Force"
+          ],
+          "label": "3. Inspect files (PowerShell)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "cat README.md",
+            "cat package.json"
+          ],
+          "label": "4. Read README and package.json (Linux/WSL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-Content README.md",
+            "Get-Content package.json"
+          ],
+          "label": "4. Read README and package.json (PowerShell)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "ls package-lock.json yarn.lock pnpm-lock.yaml bun.lockb bun.lock 2>/dev/null"
+          ],
+          "label": "5. Package manager from the lockfile (Linux/WSL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-ChildItem package-lock.json,yarn.lock,pnpm-lock.yaml,bun.lockb,bun.lock -ErrorAction SilentlyContinue"
+          ],
+          "label": "5. Package manager from the lockfile (PowerShell)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "node --version",
+            "nvm use"
+          ],
+          "label": "6. Node version: compare with .nvmrc / package.json 'engines' / README (nvm-windows: nvm use X.Y.Z)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm ci"
+          ],
+          "label": "7. Install dependencies with the matching manager (npm ci for package-lock.json; yarn install; pnpm install)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "[ -f .env ] || cp .env.example .env"
+          ],
+          "label": "8. Env file ONLY if .env.example exists and .env does not (Linux/WSL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "if (-not (Test-Path .env)) { Copy-Item .env.example .env }"
+          ],
+          "label": "8. Same, PowerShell - then fill in real values",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm run dev"
+          ],
+          "label": "9. Start using the project's own script (see package.json 'scripts')",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git grep -nE \"createRoot|<Route|createBrowserRouter\" src"
+          ],
+          "label": "10. Locate entry point and routes; components/ pages/ and *.css are next to them",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "Edit one heading in the page you found (see Editing guide > Change page headings). Save and check the browser."
+          ],
+          "label": "11. Make a small change and test it"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm run build"
+          ],
+          "label": "12. Production build to catch errors",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "warning": "Follow the project's lockfile and scripts. Do not 'fix' an existing project by regenerating it.",
+      "expected": "App at http://localhost:5173 (or the port printed), your change visible, and 'npm run build' passes.",
+      "troubleshooting": [
+        "Install errors: see Common errors (ERESOLVE, Node version).",
+        "Never run 'npm create vite' inside an existing project, and never overwrite its package.json, lockfile or config files.",
+        "No README instructions? package.json 'scripts' is the source of truth."
+      ]
+    },
+    {
+      "id": "nav-commands",
+      "title": "Navigate folders: Linux/Zsh vs PowerShell",
+      "keywords": [
+        "navigate",
+        "cd",
+        "ls",
+        "pwd",
+        "change directory",
+        "list files",
+        "make folder",
+        "tree",
+        "current directory",
+        "get-childitem",
+        "set-location"
+      ],
+      "summary": "Move around and list files from the terminal.",
+      "when": "Always - 90% of 'command not found' problems are the wrong directory.",
+      "where": "Any directory.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "pwd",
+            "ls -la",
+            "cd ~/projects/my-app",
+            "cd ..",
+            "mkdir new-folder"
+          ],
+          "label": "Linux / WSL / macOS (Bash or Zsh)",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-Location",
+            "Get-ChildItem",
+            "Set-Location C:\\Users\\you\\projects\\my-app",
+            "Set-Location ..",
+            "mkdir new-folder"
+          ],
+          "label": "Windows PowerShell (aliases pwd, ls, cd also work)",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "tree -L 2 -I node_modules"
+          ],
+          "label": "Folder tree (install with: sudo apt install tree)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "tree /F src"
+          ],
+          "label": "Folder tree of src (PowerShell)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "code ."
+          ],
+          "label": "Open the project in VS Code (needs the 'code' command on PATH)",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "You always know which folder you are in before running npm or git.",
+      "troubleshooting": [
+        "WSL path to Windows files: /mnt/c/Users/you/... - but keep projects inside the Linux home (~) for speed and correct permissions.",
+        "Paths with spaces need quotes: cd \"My Projects\"."
+      ]
+    },
+    {
+      "id": "find-files",
+      "title": "Find files by name",
+      "keywords": [
+        "find file",
+        "find jsx",
+        "locate file",
+        "search file name",
+        "find where file is"
+      ],
+      "summary": "List files matching a pattern.",
+      "when": "You know a file name but not its folder.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "find src -name \"*.jsx\" "
+          ],
+          "label": "Linux/WSL",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-ChildItem -Recurse -Filter *.jsx src"
+          ],
+          "label": "PowerShell",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "find . -name \"vite.config.*\" -not -path \"./node_modules/*\" "
+          ],
+          "label": "Find config files (Linux/WSL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-ChildItem -Recurse -Filter vite.config.* -Exclude node_modules"
+          ],
+          "label": "Find config files (PowerShell; may also scan node_modules - prefer the root folder listing)",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "A list of matching paths.",
+      "troubleshooting": [
+        "To search INSIDE files for text, use the 'Find where existing page content is defined' sheet."
+      ]
+    },
+    {
+      "id": "read-readme-package",
+      "title": "Read README.md and package.json",
+      "keywords": [
+        "readme",
+        "read package.json",
+        "what to look for",
+        "dependencies",
+        "engines",
+        "scripts"
+      ],
+      "summary": "These two files tell you how the project runs and what it uses.",
+      "when": "First minutes in any repository.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "less README.md      # q to quit",
+            "cat package.json"
+          ],
+          "label": "Linux/WSL",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-Content README.md",
+            "Get-Content package.json"
+          ],
+          "label": "PowerShell",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "\"scripts\"          how to run/build (dev, build, preview, lint)",
+            "\"dependencies\"     react, react-router-dom, tailwindcss ... = what the app uses",
+            "\"devDependencies\"  vite, typescript, eslint ... = tooling",
+            "\"engines\"          required Node version",
+            "\"type\": \"module\"   ES modules (normal for Vite)"
+          ],
+          "label": "What to look for in package.json"
+        }
+      ],
+      "expected": "You know the start command, Node version and main libraries (React Router? Tailwind? TypeScript?)."
+    },
+    {
+      "id": "repo-env-files",
+      "title": "Create local environment files only when required",
+      "keywords": [
+        ".env.example",
+        "env file",
+        "copy env",
+        "secrets",
+        "environment setup",
+        "gitignore env"
+      ],
+      "summary": "Some projects need a local .env with API URLs or keys; most Vite starters do not.",
+      "when": "README mentions environment variables, or the app fails with 'undefined' config.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "[ -f .env ] || cp .env.example .env"
+          ],
+          "label": "Copy the template without overwriting an existing .env (Linux/WSL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "if (-not (Test-Path .env)) { Copy-Item .env.example .env }"
+          ],
+          "label": "Same in PowerShell",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git check-ignore -v .env"
+          ],
+          "label": "Confirm .env is git-ignored",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "warning": "Never commit .env files or paste secrets into chats/issues.",
+      "expected": "A .env file with placeholder values; edit them. check-ignore prints the .gitignore rule.",
+      "troubleshooting": [
+        "No .env.example: ask the maintainer or read the README instead of guessing keys.",
+        "Vite only exposes variables starting with VITE_."
+      ]
+    }
+  ]
+}

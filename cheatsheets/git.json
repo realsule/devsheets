@@ -1,0 +1,581 @@
+{
+  "menu": 1,
+  "menu_title": "Git and GitHub",
+  "section": "Git",
+  "order": 0,
+  "entries": [
+    {
+      "id": "git-versions",
+      "title": "Check Git and Node.js versions",
+      "keywords": [
+        "git version",
+        "node version",
+        "check version",
+        "installed",
+        "is git installed"
+      ],
+      "summary": "Prints the installed versions so you know the tools are available.",
+      "when": "On a new machine, or whenever a command says 'not found'.",
+      "where": "Any terminal, any directory.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git --version",
+            "node --version",
+            "npm --version"
+          ],
+          "dir": "Any directory"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "sudo apt update && sudo apt install git"
+          ],
+          "label": "Install Git on Ubuntu/WSL if it is missing",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "winget install --id Git.Git -e --source winget"
+          ],
+          "label": "Install Git on Windows if it is missing (then reopen PowerShell)",
+          "dir": "Any directory"
+        }
+      ],
+      "expected": "Three version numbers, e.g. 'git version 2.x.x', 'v22.x.x', '10.x.x'.",
+      "troubleshooting": [
+        "'command not found' / 'not recognized': install the tool, then CLOSE and reopen the terminal so PATH refreshes.",
+        "Node missing? See 'Node.js and npm' > install with NVM."
+      ]
+    },
+    {
+      "id": "git-config",
+      "title": "Configure Git username and email",
+      "keywords": [
+        "git config",
+        "username",
+        "email",
+        "identity",
+        "author identity unknown",
+        "default branch"
+      ],
+      "summary": "Sets the name and email stored in every commit you make.",
+      "when": "Once per machine, before your first commit.",
+      "where": "Any terminal, any directory (--global applies to your whole user account).",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git config --global user.name \"Your Name\"",
+            "git config --global user.email \"you@example.com\"",
+            "git config --global init.defaultBranch main"
+          ],
+          "label": "Set your identity",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git config --global --list"
+          ],
+          "label": "Verify",
+          "dir": "Any directory"
+        }
+      ],
+      "expected": "The list shows user.name, user.email and init.defaultbranch=main.",
+      "troubleshooting": [
+        "'Author identity unknown' when committing: you skipped the first step.",
+        "Use the email on your GitHub account (or GitHub's noreply address) so commits link to your profile."
+      ]
+    },
+    {
+      "id": "git-clone",
+      "title": "Clone a repository (HTTPS or SSH) and enter it",
+      "keywords": [
+        "clone repository",
+        "git clone",
+        "download repo",
+        "clone https",
+        "clone ssh",
+        "cd into repo"
+      ],
+      "summary": "Copies a GitHub repository to your machine, including its history.",
+      "when": "Start of work on an existing project.",
+      "where": "Your projects folder - NOT inside another repository.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git clone https://github.com/USERNAME/REPO.git"
+          ],
+          "label": "HTTPS (private repos need a Personal Access Token or 'gh auth login')",
+          "dir": "The folder where you keep projects (e.g. ~/projects or C:\\Users\\you\\projects)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git clone git@github.com:USERNAME/REPO.git"
+          ],
+          "label": "SSH (needs an SSH key added to GitHub - see the SSH menu)",
+          "dir": "The folder where you keep projects (e.g. ~/projects or C:\\Users\\you\\projects)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git clone git@github.com:USERNAME/REPO.git my-folder"
+          ],
+          "label": "Optional: clone into a differently named folder",
+          "dir": "The folder where you keep projects (e.g. ~/projects or C:\\Users\\you\\projects)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "cd REPO"
+          ],
+          "label": "Enter the new folder (use the folder name Git created, or my-folder)",
+          "dir": "The folder where you keep projects (e.g. ~/projects or C:\\Users\\you\\projects)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git status"
+          ],
+          "label": "Confirm you are inside a repo",
+          "dir": "Inside the cloned repository (the project root)"
+        }
+      ],
+      "expected": "Git prints 'Cloning into...' and a new folder appears. 'git status' reports 'On branch main'.",
+      "troubleshooting": [
+        "'Permission denied (publickey)': SSH key not set up - see SSH menu > Test GitHub authentication.",
+        "'Authentication failed' on HTTPS: GitHub no longer accepts account passwords; use a token or SSH.",
+        "'destination path already exists': choose another folder name or delete the empty one."
+      ]
+    },
+    {
+      "id": "git-status-diff",
+      "title": "Check status, view changes and history",
+      "keywords": [
+        "git status",
+        "git diff",
+        "see changes",
+        "what changed",
+        "git log",
+        "history"
+      ],
+      "summary": "Shows which files changed, the exact line changes, and recent commits.",
+      "when": "Before every commit, and whenever you are unsure what state the repo is in.",
+      "where": "Inside the repository.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git status",
+            "git diff",
+            "git diff --staged",
+            "git log --oneline --graph -10"
+          ],
+          "dir": "Inside the cloned repository (the project root)"
+        }
+      ],
+      "expected": "'git diff' shows - lines (removed) and + lines (added). 'git log' shows the last 10 commits.",
+      "troubleshooting": [
+        "Output opens in a pager (less): press q to leave it.",
+        "'not a git repository': you are in the wrong folder - run 'pwd' / 'Get-Location' and cd into the repo."
+      ]
+    },
+    {
+      "id": "git-branch-commit-push",
+      "title": "Create a branch, commit, and push",
+      "keywords": [
+        "create branch",
+        "git commit",
+        "git add",
+        "git push",
+        "commit changes",
+        "push to github",
+        "new branch"
+      ],
+      "summary": "The normal loop: branch off, save your work as a commit, upload it to GitHub.",
+      "when": "Every time you start a change you may want to review or undo later.",
+      "where": "Inside the repository.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git switch -c feature/my-change"
+          ],
+          "label": "1. Create and switch to a new branch",
+          "dir": "Inside the cloned repository (the project root)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git add .",
+            "git status"
+          ],
+          "label": "2. Stage your changes and double-check what is staged",
+          "dir": "Inside the cloned repository (the project root)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git commit -m \"Describe what you changed\""
+          ],
+          "label": "3. Commit",
+          "dir": "Inside the cloned repository (the project root)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git push -u origin feature/my-change"
+          ],
+          "label": "4. First push of this branch (later: just 'git push')",
+          "dir": "Inside the cloned repository (the project root)"
+        }
+      ],
+      "expected": "Push output ends with 'Branch ... set up to track ...'. Open the link it prints to create a Pull Request.",
+      "troubleshooting": [
+        "'nothing to commit': you have not saved/changed anything, or already committed.",
+        "'current branch has no upstream branch': use the 'git push -u origin BRANCH' form shown above.",
+        "'git add .' stages everything in the current folder - check 'git status' so you do not commit .env or node_modules."
+      ]
+    },
+    {
+      "id": "git-pull",
+      "title": "Pull the latest changes",
+      "keywords": [
+        "git pull",
+        "git fetch",
+        "update repo",
+        "get latest",
+        "sync",
+        "divergent branches"
+      ],
+      "summary": "Downloads new commits from GitHub and merges them into your current branch.",
+      "when": "Before starting work and before pushing.",
+      "where": "Inside the repository.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git pull"
+          ],
+          "dir": "Inside the cloned repository (the project root)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git fetch"
+          ],
+          "label": "Safer alternative: download only, merge later",
+          "dir": "Inside the cloned repository (the project root)"
+        }
+      ],
+      "expected": "'Already up to date.' or a list of updated files.",
+      "troubleshooting": [
+        "'divergent branches': choose a strategy once, e.g. 'git config --global pull.rebase false' (merge).",
+        "Local uncommitted changes blocking the pull: commit them, or 'git stash' then 'git stash pop'.",
+        "Merge conflict: see 'Resolve a merge conflict'."
+      ]
+    },
+    {
+      "id": "git-remote",
+      "title": "Check or change the remote (HTTPS to SSH)",
+      "keywords": [
+        "git remote",
+        "remote -v",
+        "origin",
+        "switch to ssh",
+        "set-url",
+        "change remote url"
+      ],
+      "summary": "Shows where 'git push' sends your code, and lets you change it.",
+      "when": "When pushes ask for a password, or after moving a repository.",
+      "where": "Inside the repository.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git remote -v"
+          ],
+          "label": "Show current remotes",
+          "dir": "Inside the cloned repository (the project root)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git remote set-url origin git@github.com:USERNAME/REPO.git"
+          ],
+          "label": "Switch origin to SSH",
+          "dir": "Inside the cloned repository (the project root)"
+        }
+      ],
+      "expected": "'origin' lines now start with git@github.com:.",
+      "troubleshooting": [
+        "'No such remote origin': add it with 'git remote add origin URL'."
+      ]
+    },
+    {
+      "id": "git-init-new",
+      "title": "Put a new local project on GitHub",
+      "keywords": [
+        "git init",
+        "new repository",
+        "first push",
+        "publish project",
+        "remote add origin",
+        "upload project"
+      ],
+      "summary": "Turns an existing folder into a repo and uploads it to a GitHub repository you created.",
+      "when": "Starting a project locally (Vite does not run 'git init' for you).",
+      "where": "Project root of the project you want to upload.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git init",
+            "git add .",
+            "git commit -m \"Initial commit\"",
+            "git branch -M main",
+            "git remote add origin git@github.com:USERNAME/REPO.git",
+            "git push -u origin main"
+          ],
+          "label": "First create an EMPTY repo on github.com (no README/.gitignore), then run:",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "Your files appear on the GitHub repository page.",
+      "troubleshooting": [
+        "'remote origin already exists': use 'git remote set-url origin URL' instead of 'add'.",
+        "Create .gitignore BEFORE 'git add .' so node_modules is not committed."
+      ]
+    },
+    {
+      "id": "git-gitignore",
+      "title": "Create a .gitignore for a React/Vite project",
+      "keywords": [
+        "gitignore",
+        "ignore node_modules",
+        "ignore env",
+        "untrack files",
+        "git rm cached"
+      ],
+      "summary": "Tells Git which files to never track (dependencies, build output, secrets).",
+      "when": "Before the first commit. Vite templates already include one - check before creating.",
+      "where": "Project root.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "touch .gitignore"
+          ],
+          "label": "Create an empty file (Linux/WSL/macOS)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "New-Item .gitignore -ItemType File"
+          ],
+          "label": "Create an empty file (PowerShell)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "node_modules",
+            "dist",
+            ".env",
+            ".env.local",
+            ".DS_Store",
+            "*.log"
+          ],
+          "label": "Put at least this in .gitignore",
+          "file": ".gitignore"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git rm -r --cached node_modules"
+          ],
+          "label": "Already committed node_modules by mistake? Untrack it (files stay on disk)",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "warning": "'git rm -r --cached' only removes files from Git's index; your files on disk stay. Commit afterwards.",
+      "expected": "'git status' no longer lists node_modules or .env.",
+      "troubleshooting": [
+        "Adding a file to .gitignore does NOT untrack files already committed - use the 'git rm --cached' step."
+      ]
+    },
+    {
+      "id": "git-undo",
+      "title": "Undo changes safely (restore, unstage, stash)",
+      "keywords": [
+        "undo changes",
+        "discard changes",
+        "git restore",
+        "unstage",
+        "git stash",
+        "revert file"
+      ],
+      "summary": "Reverts a file, unstages it, or parks work-in-progress without losing it.",
+      "when": "You broke something, or want a clean tree to pull/switch branches.",
+      "where": "Inside the repository.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git restore --staged src/App.jsx"
+          ],
+          "label": "Unstage a file (safe, keeps your edits)",
+          "dir": "Inside the cloned repository (the project root)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git stash",
+            "git stash pop"
+          ],
+          "label": "Park all uncommitted work, then bring it back (safe)",
+          "dir": "Inside the cloned repository (the project root)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git restore src/App.jsx"
+          ],
+          "label": "DISCARD uncommitted edits in one file (cannot be undone)",
+          "dir": "Inside the cloned repository (the project root)"
+        }
+      ],
+      "warning": "'git restore FILE' permanently throws away uncommitted edits in that file. Stash instead if unsure. Avoid 'git reset --hard' and 'git clean -fd' unless you fully understand them.",
+      "expected": "'git status' shows the file back in its committed state.",
+      "troubleshooting": [
+        "Run 'git diff src/App.jsx' first to see exactly what you would lose."
+      ]
+    },
+    {
+      "id": "git-conflicts",
+      "title": "Resolve a merge conflict",
+      "keywords": [
+        "merge conflict",
+        "conflict markers",
+        "<<<<<<<",
+        "resolve conflict",
+        "merge abort"
+      ],
+      "summary": "Git cannot auto-merge two edits to the same lines, so it asks you to choose.",
+      "when": "After 'git pull' or 'git merge' reports CONFLICT.",
+      "where": "Inside the repository.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git status"
+          ],
+          "label": "1. List files marked 'both modified'",
+          "dir": "Inside the cloned repository (the project root)"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "<<<<<<< HEAD",
+            "your version",
+            "=======",
+            "their version",
+            ">>>>>>> origin/main"
+          ],
+          "label": "2. Edit the file: keep what you want, delete ALL three marker lines",
+          "file": "the conflicted file"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git add src/App.jsx",
+            "git commit"
+          ],
+          "label": "3. Mark resolved and finish the merge",
+          "dir": "Inside the cloned repository (the project root)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git merge --abort"
+          ],
+          "label": "Or: give up and return to before the merge",
+          "dir": "Inside the cloned repository (the project root)"
+        }
+      ],
+      "expected": "'git status' is clean; the app still runs (run 'npm run build' to check).",
+      "troubleshooting": [
+        "Leftover '<<<<<<<' in code causes syntax errors - search the project for them: git grep -n '<<<<<<<'."
+      ]
+    },
+    {
+      "id": "git-auth-errors",
+      "title": "Fix GitHub authentication and connection errors",
+      "keywords": [
+        "permission denied publickey",
+        "authentication failed",
+        "could not resolve host",
+        "failed to push some refs",
+        "host key verification failed",
+        "repository not found",
+        "connection timed out"
+      ],
+      "summary": "Diagnose why clone/pull/push cannot talk to GitHub.",
+      "when": "Any 'fatal:' error mentioning access, authentication or network.",
+      "where": "Inside the repository (or any folder for the SSH test).",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git remote -v"
+          ],
+          "label": "1. Is the remote HTTPS or SSH?",
+          "dir": "Inside the cloned repository (the project root)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "ssh -T git@github.com"
+          ],
+          "label": "2. Test SSH auth",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "ssh -vT git@github.com"
+          ],
+          "label": "3. Verbose output shows which key is offered",
+          "dir": "Any directory"
+        }
+      ],
+      "expected": "Step 2 prints: 'Hi USERNAME! You've successfully authenticated, but GitHub does not provide shell access.'",
+      "troubleshooting": [
+        "Permission denied (publickey): key not loaded or not added to GitHub. Run ssh-add -l; see SSH menu.",
+        "Authentication failed (HTTPS): passwords are not accepted; use a Personal Access Token, 'gh auth login', or switch to SSH.",
+        "Repository not found: typo in URL, or no access to a private repo (wrong GitHub account).",
+        "Could not resolve host / timed out: check internet/VPN; if port 22 is blocked use SSH over port 443 (SSH menu).",
+        "Host key verification failed: type 'yes' at the first-connect prompt; never ignore a changed-key warning on a trusted network.",
+        "failed to push some refs (non-fast-forward): run 'git pull' first, resolve conflicts, push again."
+      ]
+    }
+  ]
+}

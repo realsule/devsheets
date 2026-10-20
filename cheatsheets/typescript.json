@@ -1,0 +1,169 @@
+{
+  "menu": 5,
+  "menu_title": "JavaScript and TypeScript",
+  "section": "TypeScript",
+  "order": 1,
+  "entries": [
+    {
+      "id": "ts-new-project",
+      "title": "TypeScript setup for a React project",
+      "keywords": [
+        "typescript setup",
+        "typescript react",
+        "react-ts",
+        "tsx",
+        "start typescript project",
+        "tsconfig",
+        "add typescript"
+      ],
+      "summary": "Easiest: start from the react-ts template. For an existing JS project, migrate file by file.",
+      "when": "You want typed React code.",
+      "where": "A parent folder like ~/projects (NOT inside another project)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npm create vite@latest my-app -- --template react-ts"
+          ],
+          "label": "New project",
+          "dir": "A parent folder like ~/projects (NOT inside another project)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm install -D typescript @types/react @types/react-dom"
+          ],
+          "label": "Existing JS project: add the packages",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "Existing project: scaffold a react-ts project in a TEMP folder and copy its tsconfig*.json",
+            "files across (do not replace your package.json/vite.config).",
+            "Then rename files one at a time: App.jsx -> App.tsx, main.jsx -> main.tsx.",
+            "Update the <script src=\"/src/main.jsx\"> line in index.html to main.tsx."
+          ],
+          "label": "Migrating an existing project"
+        }
+      ],
+      "expected": "Files end in .ts/.tsx and 'npm run build' type-checks them.",
+      "troubleshooting": [
+        "Your editor must use the project's TypeScript version (VS Code: 'TypeScript: Select TypeScript Version').",
+        "Migrating? Do it on a branch; one file at a time."
+      ]
+    },
+    {
+      "id": "ts-props-state",
+      "title": "Typed props and state",
+      "keywords": [
+        "typescript props",
+        "interface",
+        "usestate type",
+        "typed component",
+        "props type",
+        "typescript useState"
+      ],
+      "summary": "Describe the shape of props and state so mistakes are caught early.",
+      "when": "Writing .tsx components.",
+      "where": "Component .tsx file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "tsx",
+          "code": [
+            "import { useState } from 'react'",
+            "",
+            "interface CardProps {",
+            "  title: string",
+            "  count?: number          // optional",
+            "}",
+            "",
+            "export default function Card({ title, count = 0 }: CardProps) {",
+            "  const [tags, setTags] = useState<string[]>([])",
+            "  const [user, setUser] = useState<{ name: string } | null>(null)",
+            "  return <h3>{title} ({count}) {tags.length}</h3>",
+            "}"
+          ],
+          "file": "src/components/Card.tsx"
+        }
+      ],
+      "expected": "Wrong prop types show red squiggles and fail the build.",
+      "troubleshooting": [
+        "Avoid 'any'; use unknown or a real type."
+      ]
+    },
+    {
+      "id": "ts-events",
+      "title": "Typed events and forms",
+      "keywords": [
+        "typescript event",
+        "onchange type",
+        "changeevent",
+        "formevent",
+        "input event type"
+      ],
+      "summary": "Types for input and form handlers.",
+      "when": "Handlers in .tsx files show 'implicitly has an any type'.",
+      "where": "Component .tsx file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "tsx",
+          "code": [
+            "import { useState, type ChangeEvent, type FormEvent } from 'react'",
+            "",
+            "const [name, setName] = useState('')",
+            "",
+            "function onChange(e: ChangeEvent<HTMLInputElement>) { setName(e.target.value) }",
+            "function onSubmit(e: FormEvent<HTMLFormElement>) { e.preventDefault() }"
+          ],
+          "file": "src/pages/Contact.tsx"
+        }
+      ],
+      "expected": "Handlers compile without 'any' warnings."
+    },
+    {
+      "id": "ts-typecheck",
+      "title": "Type-check without a full build; common TS errors",
+      "keywords": [
+        "tsc",
+        "type check",
+        "typescript error",
+        "cannot find module",
+        "possibly undefined",
+        "property does not exist",
+        "@types"
+      ],
+      "summary": "Run the compiler to list type errors.",
+      "when": "Before committing a TypeScript project.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npx tsc -b"
+          ],
+          "label": "Matches the Vite template's build step (tsc -b && vite build)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm install -D @types/PACKAGE"
+          ],
+          "label": "Missing types for a library",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "No output = no type errors.",
+      "troubleshooting": [
+        "'Cannot find module or its type declarations': install @types/NAME or add a declaration file.",
+        "'Object is possibly undefined/null': check first (if (!x) return) or use ?.",
+        "'Property X does not exist on type': update the interface/type that describes the object."
+      ]
+    }
+  ]
+}

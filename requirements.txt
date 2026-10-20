@@ -1,0 +1,3 @@
+# DevSheets runs on the Python 3.8+ standard library alone - nothing here is required.
+# Optional: syntax-highlighted code blocks.
+rich>=13.0

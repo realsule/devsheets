@@ -1,0 +1,210 @@
+{
+  "menu": 5,
+  "menu_title": "JavaScript and TypeScript",
+  "section": "JavaScript",
+  "order": 0,
+  "entries": [
+    {
+      "id": "js-vars-functions",
+      "title": "Variables, arrow functions and template strings",
+      "keywords": [
+        "javascript basics",
+        "const let",
+        "arrow function",
+        "template literal",
+        "function syntax",
+        "js basics"
+      ],
+      "summary": "The syntax you see constantly in React code.",
+      "when": "Reading or writing component code.",
+      "where": "Any .js/.jsx file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "js",
+          "code": [
+            "const name = 'Sule'            // cannot be reassigned",
+            "let count = 0                   // can be reassigned",
+            "const add = (a, b) => a + b     // arrow function",
+            "const greeting = `Hello ${name}, ${count} items`   // template string"
+          ],
+          "file": "any .js/.jsx"
+        }
+      ],
+      "expected": "You can read most component code.",
+      "troubleshooting": [
+        "Default to const; use let only when the value must change.",
+        "Template strings use backticks `, not quotes."
+      ]
+    },
+    {
+      "id": "js-arrays-map",
+      "title": "Arrays: map, filter, find (and rendering lists)",
+      "keywords": [
+        "array map",
+        "render list",
+        "filter",
+        "find",
+        "reduce",
+        "key prop",
+        "list in react",
+        "javascript array methods"
+      ],
+      "summary": "Transform arrays; in React, map turns data into JSX.",
+      "when": "Showing lists of items.",
+      "where": "Component file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "js",
+          "code": [
+            "const nums = [1, 2, 3]",
+            "nums.map(n => n * 2)        // [2, 4, 6]",
+            "nums.filter(n => n > 1)     // [2, 3]",
+            "nums.find(n => n === 2)     // 2"
+          ],
+          "file": "any .js"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "const items = [{ id: 1, name: 'Shirt' }, { id: 2, name: 'Hat' }]",
+            "",
+            "<ul>",
+            "  {items.map(item => (",
+            "    <li key={item.id}>{item.name}</li>",
+            "  ))}",
+            "</ul>"
+          ],
+          "label": "In JSX: always give a unique key",
+          "file": "component"
+        }
+      ],
+      "expected": "A <li> per item.",
+      "troubleshooting": [
+        "Warning 'Each child in a list should have a unique key': add key={...} on the outermost element in map."
+      ]
+    },
+    {
+      "id": "js-destructuring-spread",
+      "title": "Destructuring, spread and optional chaining",
+      "keywords": [
+        "destructuring",
+        "spread operator",
+        "...",
+        "optional chaining",
+        "?.",
+        "nullish",
+        "copy object",
+        "update state object"
+      ],
+      "summary": "Concise ways to unpack and copy data - essential for props and state.",
+      "when": "Working with props, state objects and API responses.",
+      "where": "Any .js/.jsx file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "js",
+          "code": [
+            "const { title, text } = props            // unpack properties",
+            "const [first, ...rest] = list            // unpack arrays",
+            "const next = { ...user, name: 'New' }    // copy object, override name",
+            "const more = [...items, newItem]         // copy array, add item",
+            "const city = user?.address?.city ?? 'Unknown'   // safe access + default"
+          ],
+          "file": "any .js/.jsx"
+        }
+      ],
+      "expected": "You can update state immutably.",
+      "troubleshooting": [
+        "'Cannot read properties of undefined': use ?. or check data exists before using it."
+      ]
+    },
+    {
+      "id": "js-modules",
+      "title": "ES modules: import/export recap",
+      "keywords": [
+        "import export",
+        "es modules",
+        "default export",
+        "named export",
+        "require vs import",
+        "module syntax",
+        "type module"
+      ],
+      "summary": "Vite uses import/export (ES modules), not require().",
+      "when": "Splitting code, or seeing 'require is not defined'.",
+      "where": "Any source file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "js",
+          "code": [
+            "export const API = 'https://example.com'   // named",
+            "export default function App() {}           // default",
+            "",
+            "import App from './App'",
+            "import { API } from './config'"
+          ],
+          "file": "any .js/.jsx"
+        }
+      ],
+      "expected": "Imports resolve in the browser.",
+      "troubleshooting": [
+        "'require is not defined': switch to import syntax."
+      ]
+    },
+    {
+      "id": "js-fetch",
+      "title": "Fetch data with async/await and useEffect",
+      "keywords": [
+        "fetch",
+        "api call",
+        "async await",
+        "useeffect",
+        "load data",
+        "axios",
+        "fetch data in react"
+      ],
+      "summary": "Load data when a component appears.",
+      "when": "Showing data from an API.",
+      "where": "Component file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "jsx",
+          "code": [
+            "import { useState, useEffect } from 'react'",
+            "",
+            "export default function Products() {",
+            "  const [items, setItems] = useState([])",
+            "  const [error, setError] = useState(null)",
+            "",
+            "  useEffect(() => {",
+            "    async function load() {",
+            "      try {",
+            "        const res = await fetch('/api/products')",
+            "        if (!res.ok) throw new Error(res.status)",
+            "        setItems(await res.json())",
+            "      } catch (e) {",
+            "        setError(e.message)",
+            "      }",
+            "    }",
+            "    load()",
+            "  }, [])   // [] = run once",
+            "",
+            "  if (error) return <p>Error: {error}</p>",
+            "  return <ul>{items.map(i => <li key={i.id}>{i.name}</li>)}</ul>",
+            "}"
+          ],
+          "file": "src/pages/Products.jsx"
+        }
+      ],
+      "expected": "The list appears after the request finishes.",
+      "troubleshooting": [
+        "CORS error: see Common errors > CORS.",
+        "Infinite requests: you forgot the [] dependency array."
+      ]
+    }
+  ]
+}

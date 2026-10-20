@@ -1,0 +1,154 @@
+{
+  "menu": 6,
+  "menu_title": "HTML and CSS",
+  "section": "HTML/CSS",
+  "order": 0,
+  "entries": [
+    {
+      "id": "html-skeleton",
+      "title": "HTML page skeleton (and Vite's index.html)",
+      "keywords": [
+        "html",
+        "index.html",
+        "html skeleton",
+        "doctype",
+        "meta viewport",
+        "root div",
+        "html basics"
+      ],
+      "summary": "Minimum valid page; Vite's index.html is the same plus a root div and module script.",
+      "when": "Plain HTML pages, or understanding index.html.",
+      "where": "index.html in the project root.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "html",
+          "code": [
+            "<!doctype html>",
+            "<html lang=\"en\">",
+            "  <head>",
+            "    <meta charset=\"UTF-8\" />",
+            "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />",
+            "    <title>My Page</title>",
+            "  </head>",
+            "  <body>",
+            "    <div id=\"root\"></div>",
+            "    <script type=\"module\" src=\"/src/main.jsx\"></script>",
+            "  </body>",
+            "</html>"
+          ],
+          "file": "index.html"
+        }
+      ],
+      "expected": "Browser shows the page title; React mounts into #root.",
+      "troubleshooting": [
+        "Do not delete <div id=\"root\"> or the script line in a React project."
+      ]
+    },
+    {
+      "id": "css-flexbox",
+      "title": "Center and align with Flexbox",
+      "keywords": [
+        "flexbox",
+        "center div",
+        "justify-content",
+        "align-items",
+        "flex row column",
+        "css center",
+        "navbar layout"
+      ],
+      "summary": "One-dimensional layout: rows or columns.",
+      "when": "Navbars, centering, button rows.",
+      "where": "Your .css file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "css",
+          "code": [
+            ".row {",
+            "  display: flex;",
+            "  justify-content: space-between;  /* main axis */",
+            "  align-items: center;             /* cross axis */",
+            "  gap: 1rem;",
+            "}",
+            ".center-screen { display: flex; justify-content: center; align-items: center; min-height: 100vh; }"
+          ],
+          "file": "src/index.css"
+        }
+      ],
+      "expected": "Children line up in a row and are vertically centered.",
+      "troubleshooting": [
+        "flex-direction: column swaps the axes."
+      ]
+    },
+    {
+      "id": "css-grid-responsive",
+      "title": "Responsive card grid",
+      "keywords": [
+        "css grid",
+        "responsive grid",
+        "cards layout",
+        "auto-fit",
+        "minmax",
+        "media query",
+        "mobile layout"
+      ],
+      "summary": "A grid that adds/removes columns by screen width with no media queries.",
+      "when": "Card lists, galleries.",
+      "where": "Your .css file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "css",
+          "code": [
+            ".grid {",
+            "  display: grid;",
+            "  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));",
+            "  gap: 1rem;",
+            "}",
+            "@media (max-width: 600px) {",
+            "  .hero h1 { font-size: 1.75rem; }",
+            "}"
+          ],
+          "file": "src/index.css"
+        }
+      ],
+      "expected": "Cards wrap to 1, 2, 3... columns depending on width."
+    },
+    {
+      "id": "css-variables",
+      "title": "CSS variables and box-sizing reset",
+      "keywords": [
+        "css variables",
+        "custom properties",
+        "var(--",
+        "theme colors",
+        "box-sizing",
+        "dark mode",
+        "css reset"
+      ],
+      "summary": "Define colors once and reuse; make widths behave.",
+      "when": "Consistent theming.",
+      "where": "src/index.css",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "css",
+          "code": [
+            ":root {",
+            "  --brand: #4f46e5;",
+            "  --text: #111827;",
+            "}",
+            "*, *::before, *::after { box-sizing: border-box; }",
+            "a { color: var(--brand); }",
+            "@media (prefers-color-scheme: dark) {",
+            "  :root { --text: #f9fafb; }",
+            "}"
+          ],
+          "file": "src/index.css"
+        }
+      ],
+      "expected": "Changing --brand updates every place that uses it."
+    }
+  ]
+}

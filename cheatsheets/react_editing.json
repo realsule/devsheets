@@ -1,0 +1,845 @@
+{
+  "menu": 8,
+  "menu_title": "Editing existing React projects",
+  "section": "Editing",
+  "order": 0,
+  "entries": [
+    {
+      "id": "react-project-map",
+      "title": "What each file in a React/Vite project does",
+      "keywords": [
+        "project files",
+        "main.jsx",
+        "App.jsx",
+        "index.css",
+        "components",
+        "pages",
+        "assets",
+        "package.json",
+        "vite.config",
+        "project structure",
+        "where is"
+      ],
+      "summary": "A map of the files you will touch most.",
+      "when": "Opening a project for the first time.",
+      "where": "Project root.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "index.html            Single HTML page; has <div id=\"root\"> and loads /src/main.jsx",
+            "src/main.jsx|.tsx     ENTRY POINT: mounts <App /> into #root (add Router/providers here)",
+            "src/App.jsx|.tsx      Top-level component: layout and (often) the routes",
+            "src/index.css         Global styles (imported in main.jsx)",
+            "src/App.css           Styles for App (template default; optional)",
+            "src/components/       Reusable pieces (Navbar, Button, Card)",
+            "src/pages/            One component per page/route (Home, About, Contact)",
+            "src/assets/           Images/fonts you import from code",
+            "public/               Static files served as-is at /name.ext (favicon, robots.txt)",
+            "package.json          Scripts, dependencies",
+            "vite.config.js|.ts    Vite settings",
+            "node_modules/         Installed packages (never edit, never commit)"
+          ],
+          "label": "Typical layout"
+        }
+      ],
+      "expected": "You know where to look for routes, text, styles and images.",
+      "troubleshooting": [
+        "components/ and pages/ are conventions, not rules - existing projects may differ. Follow what is already there."
+      ]
+    },
+    {
+      "id": "find-existing-content",
+      "title": "Find where existing page content is defined",
+      "keywords": [
+        "find text",
+        "where is this text",
+        "find heading",
+        "locate component",
+        "search project",
+        "git grep",
+        "grep",
+        "which file"
+      ],
+      "summary": "Search the code for text you can see in the browser, then follow imports.",
+      "when": "You want to change something on a page but do not know which file renders it.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git grep -n \"Welcome to\""
+          ],
+          "label": "Best: works in Bash, Zsh and PowerShell inside a Git repo (skips node_modules)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "grep -rn \"Welcome to\" src"
+          ],
+          "label": "Linux/WSL without Git",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-ChildItem -Recurse src | Select-String \"Welcome to\""
+          ],
+          "label": "PowerShell without Git",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "1. Search a short, unique piece of visible text (text can be split across JSX lines).",
+            "2. No hit? Right-click the element in the browser > Inspect, look at its class name, search that.",
+            "3. Still stuck: start at src/main.jsx -> App.jsx -> routes -> pages/ and follow the imports."
+          ],
+          "label": "Method"
+        }
+      ],
+      "expected": "File name and line number such as src/pages/Home.jsx:12.",
+      "troubleshooting": [
+        "Text may come from a data array or an API - search a nearby label instead.",
+        "Several matches: the one inside a component that is imported by your route is the right one."
+      ]
+    },
+    {
+      "id": "change-text",
+      "title": "Change page headings, paragraphs and buttons",
+      "keywords": [
+        "change heading",
+        "edit text",
+        "change paragraph",
+        "change button text",
+        "update title",
+        "modify text",
+        "h1"
+      ],
+      "summary": "Edit the text between JSX tags in the file that renders the page.",
+      "when": "Text updates: titles, descriptions, button labels.",
+      "where": "Edit src/App.jsx (or the page file you found).",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "jsx",
+          "code": [
+            "<h1>Vite + React</h1>",
+            "<p>Edit src/App.jsx and save to test HMR</p>",
+            "<button>count is 0</button>"
+          ],
+          "label": "BEFORE",
+          "file": "src/App.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "<h1>Welcome to My Studio</h1>",
+            "<p>We build websites and music videos.</p>",
+            "<button>Book a session</button>"
+          ],
+          "label": "AFTER",
+          "file": "src/App.jsx"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "Also change the browser tab title in index.html: <title>My Studio</title>"
+          ],
+          "label": "Tab title"
+        }
+      ],
+      "expected": "Save the file: the browser updates without a manual refresh (hot reload).",
+      "troubleshooting": [
+        "Nothing changed: you edited a file that is not rendered. Use 'Find where existing page content is defined'.",
+        "Red error overlay: usually an unclosed tag or missing '</'. Read the line number it shows.",
+        "Use { } for JavaScript values: <h1>{title}</h1>."
+      ]
+    },
+    {
+      "id": "change-image",
+      "title": "Change an image (public folder or src/assets)",
+      "keywords": [
+        "change image",
+        "add image",
+        "img src",
+        "logo",
+        "public folder",
+        "assets",
+        "image not showing",
+        "broken image"
+      ],
+      "summary": "Two ways to reference images in Vite.",
+      "when": "Replacing a logo or hero image.",
+      "where": "Edit the component; put image files in public/ or src/assets/.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "jsx",
+          "code": [
+            "<img src=\"/logo.png\" alt=\"My logo\" />"
+          ],
+          "label": "Option 1: file in public/logo.png - use an absolute path starting with /",
+          "file": "src/App.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "import logo from './assets/logo.png'",
+            "",
+            "<img src={logo} alt=\"My logo\" />"
+          ],
+          "label": "Option 2: file in src/assets/logo.png - import it",
+          "file": "src/App.jsx"
+        }
+      ],
+      "expected": "The new image shows after save.",
+      "troubleshooting": [
+        "Broken image: file name is case-sensitive on Linux/Netlify (Logo.png != logo.png).",
+        "Do not write src=\"src/assets/logo.png\" - that path does not exist in the browser.",
+        "Always add a meaningful alt text."
+      ]
+    },
+    {
+      "id": "create-component",
+      "title": "Create a reusable component",
+      "keywords": [
+        "create component",
+        "new component",
+        "reusable component",
+        "export default",
+        "jsx component",
+        "components folder"
+      ],
+      "summary": "A component is a function that returns JSX; its name must start with a capital letter.",
+      "when": "The same UI appears more than once, or a file is getting long.",
+      "where": "Create src/components/Greeting.jsx, then import it where you use it.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "jsx",
+          "code": [
+            "export default function Greeting() {",
+            "  return <h2>Hello from a component</h2>",
+            "}"
+          ],
+          "label": "1. New file",
+          "file": "src/components/Greeting.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "import Greeting from './components/Greeting'",
+            "",
+            "export default function App() {",
+            "  return (",
+            "    <div>",
+            "      <Greeting />",
+            "      <Greeting />",
+            "    </div>",
+            "  )",
+            "}"
+          ],
+          "label": "2. Import and use it",
+          "file": "src/App.jsx"
+        }
+      ],
+      "expected": "Two headings appear. Editing Greeting.jsx changes both.",
+      "troubleshooting": [
+        "Lowercase name (<greeting />) is treated as an HTML tag - capitalise it.",
+        "'Failed to resolve import': check the relative path and spelling (./ vs ../)."
+      ]
+    },
+    {
+      "id": "import-export",
+      "title": "Import and export components (default vs named)",
+      "keywords": [
+        "import export",
+        "default export",
+        "named export",
+        "does not provide an export named",
+        "import path",
+        "barrel index"
+      ],
+      "summary": "Each file exports what other files can import.",
+      "when": "Moving code into new files, or fixing import errors.",
+      "where": "src/ files.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "jsx",
+          "code": [
+            "// Button.jsx",
+            "export default function Button() { return <button>Click</button> }",
+            "",
+            "// elsewhere - any name works for a default import",
+            "import Button from './components/Button'"
+          ],
+          "label": "Default export (one per file)",
+          "file": "src/components/Button.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "// helpers.jsx",
+            "export function Title() { return <h1>Hi</h1> }",
+            "export function Subtitle() { return <h2>There</h2> }",
+            "",
+            "// elsewhere - names must match, in braces",
+            "import { Title, Subtitle } from './components/helpers'"
+          ],
+          "label": "Named exports (many per file)",
+          "file": "src/components/helpers.jsx"
+        }
+      ],
+      "expected": "Imports resolve and the component renders.",
+      "troubleshooting": [
+        "'does not provide an export named X': you used braces for a default export (or vice versa).",
+        "Extensions (.jsx/.tsx) can be omitted in Vite imports; folder imports need an index file."
+      ]
+    },
+    {
+      "id": "props",
+      "title": "Pass props to a component",
+      "keywords": [
+        "props",
+        "pass props",
+        "component props",
+        "children",
+        "default props",
+        "pass data to component"
+      ],
+      "summary": "Props are inputs to a component, like function arguments.",
+      "when": "Reusing one component with different content.",
+      "where": "Component file + the place that uses it.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "jsx",
+          "code": [
+            "export default function Card({ title, text = 'No description' }) {",
+            "  return (",
+            "    <div className=\"card\">",
+            "      <h3>{title}</h3>",
+            "      <p>{text}</p>",
+            "    </div>",
+            "  )",
+            "}"
+          ],
+          "label": "Component receives props (text has a default)",
+          "file": "src/components/Card.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "<Card title=\"Music video\" text=\"Directed in Nairobi\" />",
+            "<Card title=\"Web design\" />"
+          ],
+          "label": "Use it",
+          "file": "src/App.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "<Card title=\"Wrapper\">",
+            "  <p>Anything in between becomes props.children</p>",
+            "</Card>"
+          ],
+          "label": "children: content placed between the tags",
+          "file": "src/App.jsx"
+        }
+      ],
+      "expected": "Each Card shows its own title and text.",
+      "troubleshooting": [
+        "For non-string values use braces: <Card count={3} active={true} />.",
+        "Props are read-only; change data with state in the parent."
+      ]
+    },
+    {
+      "id": "usestate",
+      "title": "Manage state with useState",
+      "keywords": [
+        "usestate",
+        "state",
+        "counter",
+        "react state",
+        "hooks",
+        "set state",
+        "controlled input"
+      ],
+      "summary": "State is data that, when changed, re-renders the component.",
+      "when": "Anything that changes while the user interacts: counters, toggles, form text.",
+      "where": "The component file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "jsx",
+          "code": [
+            "<button>Likes: 0</button>"
+          ],
+          "label": "BEFORE: static",
+          "file": "src/App.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "import { useState } from 'react'",
+            "",
+            "export default function App() {",
+            "  const [likes, setLikes] = useState(0)",
+            "  return <button onClick={() => setLikes(likes + 1)}>Likes: {likes}</button>",
+            "}"
+          ],
+          "label": "AFTER: remembers the count",
+          "file": "src/App.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "const [name, setName] = useState('')",
+            "",
+            "<input value={name} onChange={(e) => setName(e.target.value)} />",
+            "<p>Hello {name}</p>"
+          ],
+          "label": "Controlled text input",
+          "file": "src/App.jsx"
+        }
+      ],
+      "expected": "Clicking increments the number; typing updates the greeting.",
+      "troubleshooting": [
+        "Never change state directly (likes++); always call the setter.",
+        "Hooks go at the top level of a component, not inside if/for.",
+        "Updating from the previous value: setLikes(n => n + 1)."
+      ]
+    },
+    {
+      "id": "click-handlers",
+      "title": "Add click handlers and form submit",
+      "keywords": [
+        "onclick",
+        "click handler",
+        "button click",
+        "event handler",
+        "onsubmit",
+        "preventdefault",
+        "handle click"
+      ],
+      "summary": "Pass a function to onClick/onSubmit.",
+      "when": "Making buttons and forms do something.",
+      "where": "The component file.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "jsx",
+          "code": [
+            "function handleClick() {",
+            "  alert('Booked!')",
+            "}",
+            "",
+            "<button onClick={handleClick}>Book now</button>",
+            "<button onClick={() => remove(item.id)}>Delete</button>"
+          ],
+          "label": "Pass the function, do not call it",
+          "file": "src/App.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "function handleSubmit(e) {",
+            "  e.preventDefault()",
+            "  console.log('Form sent')",
+            "}",
+            "",
+            "<form onSubmit={handleSubmit}>",
+            "  <button type=\"submit\">Send</button>",
+            "</form>"
+          ],
+          "label": "Forms: stop the page reload",
+          "file": "src/pages/Contact.jsx"
+        }
+      ],
+      "expected": "Click runs the function; form logs without reloading.",
+      "troubleshooting": [
+        "onClick={handleClick()} runs it immediately on render - drop the ().",
+        "Need arguments? Wrap in an arrow function: onClick={() => remove(id)}."
+      ]
+    },
+    {
+      "id": "styling",
+      "title": "Style components (CSS files, className, inline, modules)",
+      "keywords": [
+        "styling",
+        "css in react",
+        "className",
+        "inline style",
+        "css modules",
+        "import css",
+        "style component"
+      ],
+      "summary": "Four common ways to style; use the one the project already uses.",
+      "when": "Changing colors, spacing, layout.",
+      "where": "src/index.css (global) or a CSS file next to the component.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "css",
+          "code": [
+            ".card { padding: 1rem; border-radius: 8px; background: #f4f4f5; }"
+          ],
+          "label": "1. Plain CSS file...",
+          "file": "src/components/Card.css"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "import './Card.css'",
+            "",
+            "<div className=\"card\">...</div>"
+          ],
+          "label": "...imported and used with className (not class)",
+          "file": "src/components/Card.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "<h1 style={{ color: 'tomato', fontSize: '2rem' }}>Hello</h1>"
+          ],
+          "label": "2. Inline style: double braces, camelCase",
+          "file": "src/App.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "import styles from './Card.module.css'",
+            "",
+            "<div className={styles.card}>...</div>"
+          ],
+          "label": "3. CSS Modules: file named *.module.css, class names scoped to the component",
+          "file": "src/components/Card.jsx"
+        }
+      ],
+      "expected": "Styles apply on save.",
+      "troubleshooting": [
+        "Plain CSS files are GLOBAL once imported - class names can clash.",
+        "Tailwind project? Use utility classes in className instead (see React and Vite > Tailwind)."
+      ]
+    },
+    {
+      "id": "create-pages",
+      "title": "Create pages and connect them",
+      "keywords": [
+        "create page",
+        "new page",
+        "pages folder",
+        "add page",
+        "about page",
+        "contact page"
+      ],
+      "summary": "A page is just a component in src/pages/ that a route points to.",
+      "when": "Adding About and Contact pages.",
+      "where": "Create files in src/pages/, then register them in your router.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "jsx",
+          "code": [
+            "export default function About() {",
+            "  return (",
+            "    <main>",
+            "      <h1>About us</h1>",
+            "      <p>Who we are.</p>",
+            "    </main>",
+            "  )",
+            "}"
+          ],
+          "label": "New page (repeat for Contact.jsx, Home.jsx)",
+          "file": "src/pages/About.jsx"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "Next: add a <Route> for it - see 'Set up navigation with React Router' or 'Add a route to an existing router'."
+          ],
+          "label": "Then"
+        }
+      ],
+      "expected": "The file exists; it appears in the browser once routed.",
+      "troubleshooting": [
+        "Creating the file alone does not make a URL - a route must import it."
+      ]
+    },
+    {
+      "id": "router-setup",
+      "title": "Set up navigation with React Router",
+      "keywords": [
+        "react router",
+        "react routes",
+        "routes",
+        "navigation",
+        "link",
+        "browserrouter",
+        "about contact page",
+        "setup router",
+        "navlink"
+      ],
+      "summary": "Maps URLs (/, /about, /contact) to page components and adds links that do not reload the page.",
+      "when": "Multi-page React app, starting from the Vite template.",
+      "where": "Run npm install in the project root first; edit src/main.jsx and src/App.jsx.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npm install react-router-dom"
+          ],
+          "label": "0. Install (skip if already in package.json)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "createRoot(document.getElementById('root')).render(",
+            "  <StrictMode>",
+            "    <App />",
+            "  </StrictMode>,",
+            ")"
+          ],
+          "label": "1. BEFORE",
+          "file": "src/main.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "import { BrowserRouter } from 'react-router-dom'",
+            "",
+            "createRoot(document.getElementById('root')).render(",
+            "  <StrictMode>",
+            "    <BrowserRouter>",
+            "      <App />",
+            "    </BrowserRouter>",
+            "  </StrictMode>,",
+            ")"
+          ],
+          "label": "1. AFTER: wrap <App /> in BrowserRouter (add the import at the top)",
+          "file": "src/main.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "import { Routes, Route, Link, NavLink } from 'react-router-dom'",
+            "import Home from './pages/Home'",
+            "import About from './pages/About'",
+            "import Contact from './pages/Contact'",
+            "",
+            "export default function App() {",
+            "  return (",
+            "    <>",
+            "      <nav>",
+            "        <Link to=\"/\">Home</Link> | <NavLink to=\"/about\">About</NavLink> | <NavLink to=\"/contact\">Contact</NavLink>",
+            "      </nav>",
+            "      <Routes>",
+            "        <Route path=\"/\" element={<Home />} />",
+            "        <Route path=\"/about\" element={<About />} />",
+            "        <Route path=\"/contact\" element={<Contact />} />",
+            "        <Route path=\"*\" element={<h1>404 - Page not found</h1>} />",
+            "      </Routes>",
+            "    </>",
+            "  )",
+            "}"
+          ],
+          "label": "2. Routes and links in App.jsx",
+          "file": "src/App.jsx"
+        }
+      ],
+      "expected": "http://localhost:5173/about shows About; clicking links changes the page without a full reload.",
+      "troubleshooting": [
+        "'useRoutes() may be used only in the context of a <Router>': BrowserRouter is missing in main.jsx.",
+        "Use <Link to> not <a href> for internal links, otherwise the page reloads.",
+        "404 on refresh after deploy: add an SPA redirect (see Running > Netlify)."
+      ]
+    },
+    {
+      "id": "router-routes-explained",
+      "title": "Understand routes: /, /about, /contact, params, layouts",
+      "keywords": [
+        "routes explained",
+        "react routes",
+        "route path",
+        "index route",
+        "outlet",
+        "useparams",
+        "dynamic route",
+        "nested routes",
+        "layout route",
+        "404"
+      ],
+      "summary": "How URL paths map to components, including dynamic and nested routes.",
+      "when": "Reading or extending existing routing.",
+      "where": "src/App.jsx (or wherever <Routes> / createBrowserRouter lives).",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "/          -> path=\"/\"            -> <Home />",
+            "/about     -> path=\"/about\"       -> <About />",
+            "/contact   -> path=\"/contact\"     -> <Contact />",
+            "anything else -> path=\"*\"         -> <NotFound />"
+          ],
+          "label": "URL to component"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "<Route path=\"/products/:id\" element={<Product />} />",
+            "",
+            "// Product.jsx",
+            "import { useParams } from 'react-router-dom'",
+            "const { id } = useParams()   // /products/42 -> id === '42'"
+          ],
+          "label": "Dynamic segment",
+          "file": "src/App.jsx / src/pages/Product.jsx"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "import { Outlet } from 'react-router-dom'",
+            "",
+            "function Layout() {",
+            "  return (<><nav>...</nav><Outlet /></>)   // child page renders at <Outlet />",
+            "}",
+            "",
+            "<Route element={<Layout />}>",
+            "  <Route path=\"/\" element={<Home />} />",
+            "  <Route path=\"/about\" element={<About />} />",
+            "</Route>"
+          ],
+          "label": "Shared layout (navbar/footer on every page)",
+          "file": "src/App.jsx"
+        }
+      ],
+      "expected": "You can read a route table and predict the page for any URL.",
+      "troubleshooting": [
+        "Route order does not matter in v6/v7 (best match wins), but a typo in path gives the 404 page.",
+        "Params are always strings."
+      ]
+    },
+    {
+      "id": "add-route-existing",
+      "title": "Add a route to an existing router",
+      "keywords": [
+        "add route",
+        "add page to existing",
+        "createbrowserrouter",
+        "routerprovider",
+        "where are routes defined",
+        "existing router"
+      ],
+      "summary": "First find how the project defines routes, then add one entry in the same style.",
+      "when": "Adding a page to a project that already has routing.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git grep -nE \"<Route|createBrowserRouter|RouterProvider|useRoutes\" src"
+          ],
+          "label": "1. Find the router definition",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "<Route path=\"/pricing\" element={<Pricing />} />"
+          ],
+          "label": "2a. JSX style (<Routes>): add a line",
+          "file": "where the other <Route> lines are"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "{ path: '/pricing', element: <Pricing /> },"
+          ],
+          "label": "2b. Object style (createBrowserRouter): add an object",
+          "file": "inside the createBrowserRouter([...]) array"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "import Pricing from './pages/Pricing'"
+          ],
+          "label": "3. Import the page",
+          "file": "top of the same file"
+        }
+      ],
+      "expected": "/pricing renders the new page.",
+      "troubleshooting": [
+        "Do not introduce a second router; follow the existing style.",
+        "Add a <Link to=\"/pricing\"> in the navbar component (git grep -n \"<Link\" src)."
+      ]
+    },
+    {
+      "id": "modify-safely",
+      "title": "Modify an existing project without replacing its architecture",
+      "keywords": [
+        "modify existing project",
+        "safe changes",
+        "small change",
+        "do not overwrite",
+        "edit existing react project",
+        "branch and test"
+      ],
+      "summary": "A low-risk routine for changing someone else's (or your old) code.",
+      "when": "Any change to a project you did not just create.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "git switch -c change/heading-text"
+          ],
+          "label": "1. Work on a branch",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "2. Find the file (git grep -n \"visible text\").",
+            "3. Read the imports at the top: copy the project's existing style (JS vs TS, CSS approach, router style).",
+            "4. Change ONE thing; save; check the browser.",
+            "5. Never paste over main.jsx, App.jsx, vite.config.js or package.json wholesale - edit only the lines you need."
+          ],
+          "label": "Method"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git diff",
+            "npm run build"
+          ],
+          "label": "6. Review your change and check for build errors",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "git add .",
+            "git commit -m \"Update heading text\""
+          ],
+          "label": "7. Commit",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "A small, reviewable diff and a passing build.",
+      "troubleshooting": [
+        "Too many files changed in 'git diff'? Undo with 'git restore FILE' and redo carefully.",
+        "Adding libraries? Use 'npm install NAME', not hand-editing package.json."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,454 @@
+{
+  "menu": 4,
+  "menu_title": "React and Vite",
+  "section": "Setup",
+  "order": 0,
+  "entries": [
+    {
+      "id": "vite-create",
+      "title": "Create a React project with Vite (JavaScript or TypeScript)",
+      "keywords": [
+        "create react app",
+        "vite create",
+        "npm create vite",
+        "new react project",
+        "react typescript template",
+        "choose template",
+        "react js template"
+      ],
+      "summary": "Scaffolds a new React project in a new folder.",
+      "when": "Starting a brand-new project. Never run this inside an existing project.",
+      "where": "A parent folder like ~/projects (NOT inside another project)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npm create vite@latest my-app -- --template react"
+          ],
+          "label": "JavaScript",
+          "dir": "A parent folder like ~/projects (NOT inside another project)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm create vite@latest my-app -- --template react-ts"
+          ],
+          "label": "TypeScript",
+          "dir": "A parent folder like ~/projects (NOT inside another project)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm create vite@latest my-app -- --template react-swc"
+          ],
+          "label": "JavaScript + SWC compiler (react-swc-ts for TypeScript)",
+          "dir": "A parent folder like ~/projects (NOT inside another project)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm create vite@latest"
+          ],
+          "label": "Or run with no arguments and answer the prompts (framework: React, variant: JavaScript/TypeScript)",
+          "dir": "A parent folder like ~/projects (NOT inside another project)"
+        }
+      ],
+      "warning": "Pick a folder name that does not exist yet. Do not point it at a project you already have.",
+      "expected": "A my-app folder with index.html, package.json, vite.config.js and a src/ folder. Newer versions may ask extra questions (e.g. install and start now) - answer as you like.",
+      "troubleshooting": [
+        "The extra '--' before --template is required by npm 7+; without it the template flag is ignored.",
+        "'Vite requires Node.js version X or higher': upgrade Node (Node menu).",
+        "Choosing '.' as the name scaffolds into the CURRENT folder - only do that in an empty folder."
+      ]
+    },
+    {
+      "id": "vite-install-run",
+      "title": "Install dependencies and start the dev server",
+      "keywords": [
+        "npm install",
+        "npm run dev",
+        "start dev server",
+        "run react app",
+        "localhost 5173",
+        "start vite"
+      ],
+      "summary": "Downloads dependencies, then starts Vite with hot reload.",
+      "when": "After creating or cloning a project.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "cd my-app"
+          ],
+          "label": "Enter the project (use your folder name)",
+          "dir": "A parent folder like ~/projects (NOT inside another project)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm install"
+          ],
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm run dev"
+          ],
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "Terminal shows 'VITE ... ready' and 'Local: http://localhost:5173/'. Open it in a browser; edits appear instantly.",
+      "troubleshooting": [
+        "'Missing script: dev': you are not in the project root or the project uses another script name - read package.json.",
+        "Port busy: Vite picks the next port (5174...) and prints it."
+      ]
+    },
+    {
+      "id": "vite-stop",
+      "title": "Stop the dev server",
+      "keywords": [
+        "stop server",
+        "ctrl+c",
+        "kill vite",
+        "stop npm run dev",
+        "terminate"
+      ],
+      "summary": "Ends the running dev server.",
+      "when": "Before switching branches with big changes, reinstalling packages, or closing the terminal.",
+      "where": "The terminal where 'npm run dev' is running.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "Click the terminal running Vite and press Ctrl + C.",
+            "(Windows may ask 'Terminate batch job (Y/N)?' - type Y.)"
+          ],
+          "label": "Normal way"
+        }
+      ],
+      "expected": "You get your prompt back; the browser tab shows 'connection refused' on reload.",
+      "troubleshooting": [
+        "Closed the terminal but the port is still busy: see 'Port already in use' in Running and debugging."
+      ]
+    },
+    {
+      "id": "vite-build-preview",
+      "title": "Create a production build and preview it",
+      "keywords": [
+        "npm run build",
+        "production build",
+        "npm run preview",
+        "dist folder",
+        "build react",
+        "preview build"
+      ],
+      "summary": "'build' compiles an optimized bundle into dist/; 'preview' serves that bundle locally.",
+      "when": "Before deploying, and as a final error check after changes.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npm run build"
+          ],
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm run preview"
+          ],
+          "label": "Serve dist/ locally (default http://localhost:4173)",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "Build ends with a size table and 'built in ...s'. Preview prints a Local URL.",
+      "troubleshooting": [
+        "Build fails but dev works: fix the error shown (often a bad import path, case-sensitivity, or TypeScript error).",
+        "Blank page after deploying: check 'base' in vite.config and SPA redirects (see Running > Netlify).",
+        "'preview' is for checking, not for real hosting."
+      ]
+    },
+    {
+      "id": "react-router-install",
+      "title": "Install React Router",
+      "keywords": [
+        "install react router",
+        "react-router-dom",
+        "npm install react-router-dom",
+        "routing package"
+      ],
+      "summary": "Adds client-side page routing to a React app.",
+      "when": "When you want pages such as /about and /contact.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npm install react-router-dom"
+          ],
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm ls react-router-dom"
+          ],
+          "label": "Confirm the version",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "react-router-dom appears in package.json dependencies.",
+      "troubleshooting": [
+        "Already installed? Do not reinstall; check package.json first.",
+        "Version 6 and 7 both work with the BrowserRouter/Routes/Route/Link code in the Editing guide.",
+        "Next step: Editing guide > Set up navigation with React Router."
+      ]
+    },
+    {
+      "id": "tailwind-install",
+      "title": "Install Tailwind CSS (v4 or v3 - check first)",
+      "keywords": [
+        "install tailwind",
+        "tailwind css",
+        "tailwind vite",
+        "tailwindcss version",
+        "@tailwindcss/vite",
+        "tailwind init",
+        "tailwind config"
+      ],
+      "summary": "Utility-first CSS. The setup differs between v4 and v3, so check what the project uses.",
+      "when": "Adding Tailwind to a new project, or editing one that already has it.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "grep tailwindcss package.json"
+          ],
+          "label": "0. Already installed? Which version (Linux/WSL)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Select-String tailwindcss package.json"
+          ],
+          "label": "0. Already installed? Which version (PowerShell)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm install tailwindcss @tailwindcss/vite"
+          ],
+          "label": "NEW project - Tailwind v4, step 1",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "js",
+          "code": [
+            "import { defineConfig } from 'vite'",
+            "import react from '@vitejs/plugin-react'",
+            "import tailwindcss from '@tailwindcss/vite'",
+            "",
+            "export default defineConfig({",
+            "  plugins: [react(), tailwindcss()],",
+            "})"
+          ],
+          "label": "v4 step 2: add the plugin (keep any other options you already have)",
+          "file": "vite.config.js"
+        },
+        {
+          "shell": "css",
+          "code": [
+            "@import \"tailwindcss\";"
+          ],
+          "label": "v4 step 3: first line of your main CSS file",
+          "file": "src/index.css"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm install -D tailwindcss@3 postcss autoprefixer"
+          ],
+          "label": "v3 (only if the project already uses tailwind.config.js) step 1",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npx tailwindcss init -p"
+          ],
+          "label": "v3 step 2: creates tailwind.config.js and postcss.config.js",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "js",
+          "code": [
+            "content: [\"./index.html\", \"./src/**/*.{js,ts,jsx,tsx}\"],"
+          ],
+          "label": "v3 step 3: set the content paths",
+          "file": "tailwind.config.js"
+        },
+        {
+          "shell": "css",
+          "code": [
+            "@tailwind base;",
+            "@tailwind components;",
+            "@tailwind utilities;"
+          ],
+          "label": "v3 step 4: top of your main CSS file",
+          "file": "src/index.css"
+        }
+      ],
+      "expected": "Add className=\"text-3xl font-bold underline\" to an <h1>; it becomes large, bold and underlined.",
+      "troubleshooting": [
+        "Styles not applying: restart 'npm run dev'; confirm the CSS file is imported in main.jsx.",
+        "'tailwindcss init' not found: you have v4 (no init command) - use the v4 steps.",
+        "Do not mix v3 and v4 setups in one project."
+      ]
+    },
+    {
+      "id": "package-json-scripts",
+      "title": "Understand package.json scripts",
+      "keywords": [
+        "package.json",
+        "scripts",
+        "npm run",
+        "dev build lint preview",
+        "dependencies devDependencies"
+      ],
+      "summary": "The scripts section maps short names to commands; 'npm run NAME' executes them.",
+      "when": "Reading an unfamiliar project to learn how to run it.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "json",
+          "code": [
+            "{",
+            "  \"scripts\": {",
+            "    \"dev\": \"vite\",",
+            "    \"build\": \"vite build\",",
+            "    \"lint\": \"eslint .\",",
+            "    \"preview\": \"vite preview\"",
+            "  }",
+            "}"
+          ],
+          "label": "Typical Vite scripts (TypeScript projects use \"build\": \"tsc -b && vite build\")",
+          "file": "package.json"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm run dev",
+            "npm run build",
+            "npm run preview"
+          ],
+          "label": "Run them",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm run dev -- --port 3000"
+          ],
+          "label": "Pass extra flags after --",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "You know the exact commands to start, build and check the project.",
+      "troubleshooting": [
+        "'Missing script': the name is not in \"scripts\" - open package.json and use what is listed.",
+        "dependencies = needed at runtime; devDependencies = build tools. Do not hand-edit versions; use npm install."
+      ]
+    },
+    {
+      "id": "vite-env",
+      "title": "Environment variables in Vite",
+      "keywords": [
+        "env file",
+        ".env",
+        "VITE_",
+        "import.meta.env",
+        "environment variables",
+        "api url",
+        "env undefined"
+      ],
+      "summary": "Values you do not hardcode (API URLs, public keys), read via import.meta.env.",
+      "when": "Only when the project needs them - check for .env.example first.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "env",
+          "code": [
+            "VITE_API_URL=http://localhost:5000"
+          ],
+          "label": "Create the file in the project root",
+          "file": ".env.local"
+        },
+        {
+          "shell": "jsx",
+          "code": [
+            "const api = import.meta.env.VITE_API_URL"
+          ],
+          "label": "Read it in code",
+          "file": "any component or src file"
+        }
+      ],
+      "expected": "console.log(api) prints your URL. Restart 'npm run dev' after changing .env files.",
+      "troubleshooting": [
+        "undefined: the name must START with VITE_, and the dev server must be restarted.",
+        "Anything in the browser bundle is public - never put secret keys in VITE_ variables.",
+        "Keep .env/.env.local in .gitignore."
+      ]
+    },
+    {
+      "id": "vite-config",
+      "title": "Understand and edit vite.config.js / .ts",
+      "keywords": [
+        "vite.config",
+        "vite config",
+        "change port",
+        "base path",
+        "proxy",
+        "alias"
+      ],
+      "summary": "Central Vite settings: plugins, dev server port, proxy, base path.",
+      "when": "Changing the port, proxying an API, or deploying under a sub-path.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "js",
+          "code": [
+            "import { defineConfig } from 'vite'",
+            "import react from '@vitejs/plugin-react'",
+            "",
+            "export default defineConfig({",
+            "  plugins: [react()],",
+            "  server: { port: 3000 },                     // dev server port",
+            "  // base: '/my-repo/',                       // only for sub-path hosting (e.g. GitHub Pages)",
+            "})"
+          ],
+          "label": "Add options INSIDE the existing defineConfig - do not replace the file",
+          "file": "vite.config.js"
+        }
+      ],
+      "expected": "Restart the dev server; it now uses the new settings.",
+      "troubleshooting": [
+        "Keep the existing plugins array (react(), tailwindcss(), ...) when adding options."
+      ]
+    }
+  ]
+}

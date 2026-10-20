@@ -1,0 +1,339 @@
+{
+  "menu": 3,
+  "menu_title": "Node.js and npm",
+  "section": "Node",
+  "order": 0,
+  "entries": [
+    {
+      "id": "node-nvm-linux",
+      "title": "Install Node.js with NVM (Ubuntu / WSL / macOS)",
+      "keywords": [
+        "install node",
+        "nvm",
+        "nvm install",
+        "install nodejs ubuntu",
+        "node lts",
+        "nvm not found"
+      ],
+      "summary": "NVM installs and switches Node versions per user, with no sudo.",
+      "when": "Setting up a new Linux/WSL machine.",
+      "where": "Any directory in Linux/WSL.",
+      "os": "linux",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash"
+          ],
+          "label": "1. Install NVM (check github.com/nvm-sh/nvm for the newest version number)",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "source ~/.zshrc   # or: source ~/.bashrc"
+          ],
+          "label": "2. Reload your shell (or close and reopen the terminal)",
+          "dir": "Any directory"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "nvm install --lts",
+            "nvm use --lts",
+            "nvm alias default 'lts/*'",
+            "node --version",
+            "npm --version"
+          ],
+          "label": "3. Install and select the current LTS Node",
+          "dir": "Any directory"
+        }
+      ],
+      "expected": "node and npm print version numbers; new terminals still use that version.",
+      "troubleshooting": [
+        "'nvm: command not found': the installer adds lines to ~/.zshrc or ~/.bashrc - check they exist and re-source the file.",
+        "'curl: command not found': sudo apt install curl.",
+        "Do not use 'sudo npm install -g' with NVM; it is not needed."
+      ]
+    },
+    {
+      "id": "node-nvm-windows",
+      "title": "Install Node.js on Windows (nvm-windows or winget)",
+      "keywords": [
+        "install node windows",
+        "nvm-windows",
+        "winget node",
+        "node powershell",
+        "nvm use windows"
+      ],
+      "summary": "Two supported routes: nvm-windows (many versions) or winget (one LTS).",
+      "when": "Setting up Node natively on Windows.",
+      "where": "Any PowerShell directory.",
+      "os": "windows",
+      "steps": [
+        {
+          "shell": "text",
+          "code": [
+            "Download the installer from github.com/coreybutler/nvm-windows (Releases).",
+            "Uninstall any existing Node.js first, then run nvm-setup.exe and reopen PowerShell."
+          ],
+          "label": "Option A: nvm-windows"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "nvm install lts",
+            "nvm use lts",
+            "nvm list"
+          ],
+          "label": "Then install and select LTS",
+          "dir": "Any directory (may need Administrator PowerShell for 'nvm use')"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "winget install OpenJS.NodeJS.LTS"
+          ],
+          "label": "Option B: winget (single LTS version, reopen PowerShell afterwards)",
+          "dir": "Any directory"
+        }
+      ],
+      "expected": "'node --version' prints the LTS version.",
+      "troubleshooting": [
+        "'nvm is not recognized': reopen PowerShell, or reinstall nvm-windows.",
+        "nvm-windows does not read .nvmrc automatically; run 'nvm use X.Y.Z' manually."
+      ]
+    },
+    {
+      "id": "node-versions-switch",
+      "title": "Check, install and switch Node versions",
+      "keywords": [
+        "node version",
+        "npm version",
+        "switch node version",
+        "nvmrc",
+        "nvm use",
+        "required node version",
+        "engines"
+      ],
+      "summary": "Shows the active Node/npm and lets you match the version a project needs.",
+      "when": "A project fails with 'requires Node >= X', or has a .nvmrc file.",
+      "where": "Project root (to use .nvmrc) or any directory.",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "node --version",
+            "npm --version"
+          ],
+          "dir": "Any directory"
+        },
+        {
+          "shell": "bash",
+          "code": [
+            "cat .nvmrc",
+            "nvm install",
+            "nvm use"
+          ],
+          "label": "Linux/WSL: match the project's .nvmrc",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-Content .nvmrc",
+            "nvm install 20",
+            "nvm use 20"
+          ],
+          "label": "Windows (nvm-windows): read .nvmrc, then use that version manually (20 is an example)",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "'node --version' equals the version the project asks for.",
+      "troubleshooting": [
+        "Also check package.json > \"engines\" and the README for the required version."
+      ]
+    },
+    {
+      "id": "node-pm-detect",
+      "title": "Which package manager does this project use?",
+      "keywords": [
+        "package manager",
+        "lockfile",
+        "package-lock.json",
+        "yarn.lock",
+        "pnpm-lock.yaml",
+        "npm or yarn",
+        "corepack"
+      ],
+      "summary": "The lockfile tells you whether to use npm, yarn, pnpm or bun.",
+      "when": "Right after cloning, before installing dependencies.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "bash",
+          "code": [
+            "ls package-lock.json yarn.lock pnpm-lock.yaml bun.lockb bun.lock 2>/dev/null"
+          ],
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "powershell",
+          "code": [
+            "Get-ChildItem package-lock.json,yarn.lock,pnpm-lock.yaml,bun.lockb,bun.lock -ErrorAction SilentlyContinue"
+          ],
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "text",
+          "code": [
+            "package-lock.json  -> npm    (npm install / npm ci)",
+            "yarn.lock          -> yarn   (yarn install)",
+            "pnpm-lock.yaml     -> pnpm   (pnpm install)",
+            "bun.lockb / bun.lock -> bun  (bun install)"
+          ],
+          "label": "Lockfile means"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "corepack enable"
+          ],
+          "label": "yarn/pnpm missing? Corepack ships with most Node versions (or: npm install -g pnpm)",
+          "dir": "Any directory"
+        }
+      ],
+      "expected": "Exactly one lockfile is listed - use its package manager and do not mix.",
+      "troubleshooting": [
+        "Two lockfiles present: follow the README; delete nothing without asking the maintainers."
+      ]
+    },
+    {
+      "id": "npm-install-ci",
+      "title": "Install project dependencies (npm install vs npm ci)",
+      "keywords": [
+        "npm install",
+        "install dependencies",
+        "npm ci",
+        "node_modules",
+        "install packages"
+      ],
+      "summary": "Downloads everything listed in package.json into node_modules.",
+      "when": "After cloning, or after package.json changes.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npm install"
+          ],
+          "label": "Normal install (may update the lockfile)",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm ci"
+          ],
+          "label": "Exact, clean install from package-lock.json (good for a fresh clone / CI)",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "A node_modules folder appears; npm prints 'added N packages'.",
+      "troubleshooting": [
+        "'ENOENT package.json': wrong folder - cd to the folder that contains package.json.",
+        "ERESOLVE errors: see Common errors > npm ERESOLVE.",
+        "node_modules is never committed - it is rebuilt from package.json."
+      ]
+    },
+    {
+      "id": "npm-packages",
+      "title": "Add, remove and inspect packages",
+      "keywords": [
+        "npm install package",
+        "npm uninstall",
+        "devDependencies",
+        "-D",
+        "npm outdated",
+        "npm ls",
+        "add package"
+      ],
+      "summary": "Manage what your project depends on.",
+      "when": "Adding a library such as axios, or removing one you no longer use.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npm install axios"
+          ],
+          "label": "Add a runtime dependency",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm install -D eslint"
+          ],
+          "label": "Add a development-only dependency",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm uninstall axios"
+          ],
+          "label": "Remove a package",
+          "dir": "Project root (the folder that contains package.json)"
+        },
+        {
+          "shell": "any",
+          "code": [
+            "npm ls react",
+            "npm outdated"
+          ],
+          "label": "Inspect installed versions / what is outdated",
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "package.json and package-lock.json update; commit both.",
+      "troubleshooting": [
+        "Check the exact package name on npmjs.com before installing - typo-squatting is real.",
+        "Use the package manager of the project's lockfile (yarn add / pnpm add if that is what it uses)."
+      ]
+    },
+    {
+      "id": "npx-run",
+      "title": "Run a local tool with npx",
+      "keywords": [
+        "npx",
+        "run vite",
+        "local binary",
+        "vite --version",
+        "command not found vite"
+      ],
+      "summary": "Runs a CLI installed in node_modules even though it is not on your PATH.",
+      "when": "Checking whether Vite/ESLint/TypeScript is installed in the project.",
+      "where": "Project root (the folder that contains package.json)",
+      "os": "all",
+      "steps": [
+        {
+          "shell": "any",
+          "code": [
+            "npx vite --version"
+          ],
+          "dir": "Project root (the folder that contains package.json)"
+        }
+      ],
+      "expected": "A version number such as 'vite/x.y.z'.",
+      "troubleshooting": [
+        "'vite: command not found' when typing 'vite' directly is normal - use 'npm run dev' or 'npx vite'.",
+        "npx wants to download something? That means it is NOT installed: run 'npm install' first."
+      ]
+    }
+  ]
+}
